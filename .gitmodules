@@ -1,0 +1,6 @@
+[submodule "frac-gen"]
+	path = frac-gen
+	url = git@github.com:barrymoo/frac-gen.git
+[submodule "dplot"]
+	path = dplot
+	url = git@github.com:barrymoo/dplot.git
