@@ -66,7 +66,7 @@ if fileExt == 'nw':
     ofile.write('export NODELIST=nodelist.$$\n')
     ofile.write('srun --nodes=${SLURM_NNODES} bash -c \'hostname\' | sort > $NODELIST\n')
     ofile.write('cd $SLURMTMPDIR\n')
-    ofile.write('source ' + tagfile + '\n')
+    ofile.write('module load ' + tagfile + '\n')
     ofile.write('pwd\n')
     ofile.write('ulimit\n')
     ofile.write('date\n')
