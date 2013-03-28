@@ -69,7 +69,7 @@ if fileExt == 'nw':
             ofile.write('sbcast $SLURM_SUBMIT_DIR/' +
                         addFileList[i] + ' $SLURMTMPDIR/' +
                         addFileList[i]+'\n')
-    ofile.write('mpirun -np $NPROCS $NWCHEM_EXECUTABLE ' + inpFile + '\n')
+    ofile.write('mpirun -np $NPROCS $NWCHEM_EXEC ' + inpFile + '\n')
     ofile.write('cp -n *movecs $SLURM_SUBMIT_DIR\n')
     if fileName == 'dplot':
         print('Found dplot.nw --> Copying back cube files!')
