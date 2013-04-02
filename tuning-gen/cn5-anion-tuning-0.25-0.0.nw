@@ -1,0 +1,59 @@
+#+++++++++++++++++++++++++++++++++++
+##### NWChem input script #### START
+#+++++++++++++++++++++++++++++++++++
+echo
+start cn5-anion-tuning-0.25-0.0
+title cn5-anion-tuning-0.25-0.0
+
+memory total 800 stack 400 heap 50 global 350 mb
+
+geometry noautoz units angstrom nocenter
+symmetry c1
+C 0.000000 1.183601 -0.363998
+N 0.000000 2.388323 0.161299
+C 0.000000 0.000000 0.350122
+C 0.000000 -1.183601 -0.363998
+N 0.000000 -2.388323 0.161299
+H 0.000000 3.206628 -0.422987
+H 0.000000 1.149474 -1.446393
+H 0.000000 -2.529638 1.158454
+H 0.000000 -3.206628 -0.422987
+H 0.000000 -1.149474 -1.446393
+H 0.000000 0.000000 1.430916
+H 0.000000 2.529638 1.158454
+end
+
+## def2tzvp
+basis spherical
+* library def2-tzvp
+end
+
+charge 0
+
+scf
+direct
+vectors input atomic output cn5-anion-hf.movecs
+doublet
+uhf
+end
+
+#task scf energy
+
+dft
+odft
+mult 2
+grid xfine
+direct
+xc xcampbe96 1.0 cpbe96 1.0 HFexch 1.0
+cam 0.0 cam_alpha 0.25 cam_beta 0.75
+convergence energy 1d-8 nolevelshifting
+vectors input cn5-anion-pbe0.movecs output cn5-anion-0.25-0.0.movecs
+iterations 200
+end
+
+task dft energy
+
+#+++++++++++++++++++++++++++++++++++
+##### NWChem input script ####   END
+#+++++++++++++++++++++++++++++++++++
+
