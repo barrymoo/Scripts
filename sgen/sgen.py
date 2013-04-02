@@ -61,7 +61,7 @@ if fileExt == 'nw':
     ofile.write('export NPROCS=`srun -l hostname | wc -l`\n')
     ofile.write('export | grep SLURM\n')
     ofile.write('cd $SLURMTMPDIR\n')
-    ofile.write('module load ' + tagfile + '\n')
+    ofile.write('source ' + tagfile + '\n')
     ofile.write('sbcast $SLURM_SUBMIT_DIR/' + inpFile +
                 ' $SLURMTMPDIR/' + inpFile + '\n')
     if addFileList[0] != 0:
@@ -69,7 +69,7 @@ if fileExt == 'nw':
             ofile.write('sbcast $SLURM_SUBMIT_DIR/' +
                         addFileList[i] + ' $SLURMTMPDIR/' +
                         addFileList[i]+'\n')
-    ofile.write('mpirun -np $NPROCS $NWCHEM_EXEC ' + inpFile + '\n')
+    ofile.write('mpirun -np $NPROCS $NWCHEM_EXEC $SLURMTMPDIR/' + inpFile + '\n')
     ofile.write('cp -n *movecs $SLURM_SUBMIT_DIR\n')
     if fileName == 'dplot':
         print('Found dplot.nw --> Copying back cube files!')
