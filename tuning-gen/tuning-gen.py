@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-
 import os
+import glob
 import sys
 import argparse
-import re
 
 try:
     username=os.environ['USER']                                                                                                  
@@ -59,14 +58,14 @@ try:
         os.system('rm jobList.dat')
         sys.exit()
 
-    if not all(os.path.isfile(x) for x in fileList):
-        print('Error: You don\'t have the necessary files to run this script!')
-        sys.exit()
-
     if args.sub:
         print ('Submitting potentially modified SLURM jobs')
-        #Submit slurm jobs only and exit
-        print ('--> Tuning calculation jobs submitted :) <--')
+        for files in glob.glob('*tuning*.slurm'):
+            os.system('sbatch ' + files)
+        sys.exit()
+
+    if not all(os.path.isfile(x) for x in fileList):
+        print('Error: You don\'t have the necessary files to run this script!')
         sys.exit()
     
     #Now we can start generating tuning jobs!
