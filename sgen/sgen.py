@@ -70,10 +70,12 @@ if fileExt == 'nw':
                         addFileList[i] + ' $SLURMTMPDIR/' +
                         addFileList[i]+'\n')
     ofile.write('mpirun -np $NPROCS $NWCHEM_EXEC $SLURMTMPDIR/' + inpFile + '\n')
-    ofile.write('cp -n *movecs $SLURM_SUBMIT_DIR\n')
+    ofile.write('cp *movecs $SLURM_SUBMIT_DIR\n')
+    ofile.write('cp *civecs $SLURM_SUBMIT_DIR\n')
+    ofile.write('cp *gen $SLURM_SUBMIT_DIR\n')
     if fileName == 'dplot':
         print('Found dplot.nw --> Copying back cube files!')
-        ofile.write('cp -n *cube $SLURM_SUBMIT_DIR\n')
+        ofile.write('cp *cube $SLURM_SUBMIT_DIR\n')
     ofile.write('echo "All Done!"\n')
     ofile.write('echo "FINISHED AT " `date`\n')
 elif fileExt == 'adf':
