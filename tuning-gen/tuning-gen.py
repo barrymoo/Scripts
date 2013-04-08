@@ -135,17 +135,18 @@ try:
             nwFileList.append(jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.nw')
             nwFileList.append(jobName + '-anion-tuning-' + alpha + '-' + gamma + '.nw')
             nwFileList.append(jobName + '-cation-tuning-' + alpha + '-' + gamma + '.nw')
-            neutLines = [w.replace('GAMMA', gamma) for w in neutLines]
-            anLines = [w.replace('GAMMA', gamma) for w in anLines]
-            catLines = [w.replace('GAMMA', gamma) for w in catLines]
+            tmpNeutLines = [w.replace('GAMMA', gamma) for w in neutLines]
+            tmpAnLines = [w.replace('GAMMA', gamma) for w in anLines]
+            tmpCatLines = [w.replace('GAMMA', gamma) for w in catLines]
+            print(gamma)
             fNeut = open(nwFileList[0], 'w')
             fAn = open(nwFileList[1], 'w')
             fCat = open(nwFileList[2], 'w')
-            for j in neutLines:
+            for j in tmpNeutLines:
                 fNeut.write(j)
-            for j in anLines:
+            for j in tmpAnLines:
                 fAn.write(j)
-            for j in catLines:
+            for j in tmpCatLines:
                 fCat.write(j)
             fNeut.close()
             fAn.close()
