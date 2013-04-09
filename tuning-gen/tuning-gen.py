@@ -68,10 +68,18 @@ try:
         sys.exit()
 
     if args.sub:
-        print ('Submitting potentially modified SLURM jobs')
-        for files in glob.glob('*tuning*.slurm'):
-            os.system('sbatch ' + files)
-        sys.exit()
+        if args.top and args.d[2] == 2:
+            print ('Submitting potentially modified SLURM jobs')
+            for files in glob.glob('*tuning-0.[56789]-*.slurm'):
+                os.system('sbatch ' + files)
+            for files in glob.glob('*tuning-1.0-*.slurm'):
+                os.system('sbatch ' + files)
+            sys.exit()
+        else:    
+            print ('Submitting potentially modified SLURM jobs')
+            for files in glob.glob('*tuning*.slurm'):
+                os.system('sbatch ' + files)
+            sys.exit()
 
     if not all(os.path.isfile(x) for x in fileList):
         print('Error: You don\'t have the necessary files to run this script!')
@@ -144,6 +152,15 @@ try:
                     nwFileList.append(jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.nw')
                     nwFileList.append(jobName + '-anion-tuning-' + alpha + '-' + gamma + '.nw')
                     nwFileList.append(jobName + '-cation-tuning-' + alpha + '-' + gamma + '.nw')
+                    if not os.path.isfile(nwFileList[0]):
+                        print(nwFileList[0], 'is not a file. Check outputs!..exiting')
+                        sys.exit()
+                    if not os.path.isfile(nwFileList[1]):
+                        print(nwFileList[1], 'is not a file. Check outputs!..exiting')
+                        sys.exit()
+                    if not os.path.isfile(nwFileList[2]):
+                        print(nwFileList[2], 'is not a file. Check outputs!..exiting')
+                        sys.exit()
                     tmpNeutLines = [w.replace('ALPHA', alpha) for w in neutLines]
                     tmpAnLines = [w.replace('ALPHA', alpha) for w in anLines]
                     tmpCatLines = [w.replace('ALPHA', alpha) for w in catLines]
@@ -205,9 +222,12 @@ try:
                     fAn.close()
                     fCat.close()
                     #Now lets sgen
-                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[0] + ' -add ' + jobName + '-neutral-pbe0.movecs > /dev/null')
-                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[1] + ' -add ' + jobName + '-anion-pbe0.movecs > /dev/null')
-                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[2] + ' -add ' + jobName + '-cation-pbe0.movecs > /dev/null')
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[0] +
+                              ' -add ' + jobName + '-neutral-pbe0.movecs > /dev/null')
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[1] +
+                              ' -add ' + jobName + '-anion-pbe0.movecs > /dev/null')
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[2] +
+                              ' -add ' + jobName + '-cation-pbe0.movecs > /dev/null')
                     
     else:
         print('1D Tuning detected, generating jobs')
