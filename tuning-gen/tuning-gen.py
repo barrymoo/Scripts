@@ -3,6 +3,7 @@ import os
 import glob
 import sys
 import argparse
+import time
 
 try:
     username=os.environ['USER']                                                                                                  
@@ -24,6 +25,8 @@ try:
                         help='After -nosub, this keyword will submit jobs')
     parser.add_argument('-d', metavar='N', type=int, nargs=1, default=[1],
                         help='Dimension of Tuning, default=1')
+    parser.add_argument('-top', action='store_true', 
+                        help='When specified with 2 dimensional tuning, submits the top half of tuning grid')
     parser.add_argument('-a', metavar='N', type=float, nargs=1, default=[0.],
                         help='Alpha Parameter (has no effect is -d is 2, default=0.0')
     parser.add_argument('-clean', action='store_true',
@@ -43,10 +46,16 @@ try:
     fileList.append(jobName + '-neutral-pbe0.movecs')
     fileList.append(jobName + '-anion-pbe0.movecs')
     fileList.append(jobName + '-cation-pbe0.movecs')
+    if args.d[0] == 2 and args.top:
+        for i in range(0, 11):
+            gamma = str(float(i)/20)
+            fileList.append(jobName + '-neutral-tuning-0.5-' + gamma + '.movecs')
+            fileList.append(jobName + '-cation-tuning-0.5-' + gamma + '.movecs')
+            fileList.append(jobName + '-anion-tuning-0.5-' + gamma + '.movecs')
 
     if args.clean:
         print('Cleaning up *tuning*slurm, *tuning*nw, and *tuning*out...exiting')
-        os.system('rm *tuning*nw *tuning*slurm *tuning*out')
+        os.system('rm *tuning*nw *tuning*slurm *tuning*out *tuning*movecs')
         sys.exit()
 
     if args.cancel:
@@ -67,7 +76,7 @@ try:
     if not all(os.path.isfile(x) for x in fileList):
         print('Error: You don\'t have the necessary files to run this script!')
         sys.exit()
-    
+
     #Now we can start generating tuning jobs!
     neutLines = open(fileList[0], 'r').readlines()
     anLines = open(fileList[1], 'r').readlines()
@@ -85,7 +94,10 @@ try:
         elif neutLines[i].find('convergence') != -1:
             neutLines[i] = neutLines[i].strip() + ' nolevelshifting\n'
         elif neutLines[i].find('vectors input ' + jobName) != -1:
-            neutLines[i] = 'vectors input ' + jobName + '-neutral-pbe0.movecs output ' + jobName + '-neutral-tuning-ALPHA-GAMMA.movecs\n'
+            if args.top and args.d[0] == 2:
+                neutLines[i] = 'vectors input ' + jobName + '-neutral-tuning-0.5-GAMMA.movecs output ' + jobName + '-neutral-tuning-ALPHA-GAMMA.movecs\n'
+            else:
+                neutLines[i] = 'vectors input ' + jobName + '-neutral-pbe0.movecs output ' + jobName + '-neutral-tuning-ALPHA-GAMMA.movecs\n'
     for i in range(0, len(anLines)):
         if anLines[i].find('start') != -1:
             anLines[i] = 'start ' + jobName + '-anion-tuning-ALPHA-GAMMA\n'
@@ -98,7 +110,10 @@ try:
         elif anLines[i].find('convergence') != -1:
             anLines[i] = anLines[i].strip() + ' nolevelshifting\n'
         elif anLines[i].find('vectors input ' + jobName) != -1:
-            anLines[i] = 'vectors input ' + jobName + '-anion-pbe0.movecs output ' + jobName + '-anion-tuning-ALPHA-GAMMA.movecs\n'
+            if args.top and args.d[0] == 2:
+                anLines[i] = 'vectors input ' + jobName + '-anion-tuning-0.5-GAMMA.movecs output ' + jobName + '-anion-tuning-ALPHA-GAMMA.movecs\n'
+            else:
+                anLines[i] = 'vectors input ' + jobName + '-anion-pbe0.movecs output ' + jobName + '-anion-tuning-ALPHA-GAMMA.movecs\n'
     for i in range(0, len(catLines)):
         if catLines[i].find('start') != -1:
             catLines[i] = 'start ' + jobName + '-cation-tuning-ALPHA-GAMMA\n'
@@ -111,12 +126,89 @@ try:
         elif catLines[i].find('convergence') != -1:
             catLines[i] = catLines[i].strip() + ' nolevelshifting\n'
         elif catLines[i].find('vectors input ' + jobName) != -1:
-            catLines[i] = 'vectors input ' + jobName + '-cation-pbe0.movecs output ' + jobName + '-cation-tuning-ALPHA-GAMMA.movecs\n'
+            if args.top and args.d[0] == 2:
+                catLines[i] = 'vectors input ' + jobName + '-cation-tuning-0.5-GAMMA.movecs output ' + jobName + '-cation-tuning-ALPHA-GAMMA.movecs\n'
+            else:
+                catLines[i] = 'vectors input ' + jobName + '-cation-pbe0.movecs output ' + jobName + '-cation-tuning-ALPHA-GAMMA.movecs\n'
 
     #Now let's generate tuning jobs
     if args.d[0] == 2:
-        print('Two dimensional tuning not yet implemented, contact barrymoo@buffalo.edu')
-        sys.exit()
+        if args.top:
+            print('2D tuning detected (upper grid), generating jobs')
+            for i in range(6, 11):
+                for j in range(0, 11):
+                    alpha = str(float(i)/10)
+                    beta = str(1.0 - float(alpha))
+                    gamma = str(float(j)/20)
+                    nwFileList = []
+                    nwFileList.append(jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.nw')
+                    nwFileList.append(jobName + '-anion-tuning-' + alpha + '-' + gamma + '.nw')
+                    nwFileList.append(jobName + '-cation-tuning-' + alpha + '-' + gamma + '.nw')
+                    tmpNeutLines = [w.replace('ALPHA', alpha) for w in neutLines]
+                    tmpAnLines = [w.replace('ALPHA', alpha) for w in anLines]
+                    tmpCatLines = [w.replace('ALPHA', alpha) for w in catLines]
+                    tmpNeutLines = [w.replace('BETA', beta) for w in tmpNeutLines]
+                    tmpAnLines = [w.replace('BETA', beta) for w in tmpAnLines]
+                    tmpCatLines = [w.replace('BETA', beta) for w in tmpCatLines]
+                    tmpNeutLines = [w.replace('GAMMA', gamma) for w in tmpNeutLines]
+                    tmpAnLines = [w.replace('GAMMA', gamma) for w in tmpAnLines]
+                    tmpCatLines = [w.replace('GAMMA', gamma) for w in tmpCatLines]
+                    fNeut = open(nwFileList[0], 'w')
+                    fAn = open(nwFileList[1], 'w')
+                    fCat = open(nwFileList[2], 'w')
+                    for j in tmpNeutLines:
+                        fNeut.write(j)
+                    for j in tmpAnLines:
+                        fAn.write(j)
+                    for j in tmpCatLines:
+                        fCat.write(j)
+                    fNeut.close()
+                    fAn.close()
+                    fCat.close()
+                    #Now lets sgen
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[0] + ' -add ' +
+                              jobName + '-neutral-tuning-0.5-' + gamma + '.movecs > /dev/null')
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[1] + ' -add ' +
+                              jobName + '-anion-tuning-0.5-' + gamma + '.movecs > /dev/null')
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[2] + ' -add ' +
+                              jobName + '-cation-tuning-0.5-' + gamma + '.movecs > /dev/null')
+        else:
+            print('2D Tuning detected (lower grid), generating jobs')
+            for i in range(0, 6):
+                for j in range(0, 11):
+                    alpha = str(float(i)/10)
+                    beta = str(1.0 - float(alpha))
+                    gamma = str(float(j)/20)
+                    nwFileList = []
+                    nwFileList.append(jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.nw')
+                    nwFileList.append(jobName + '-anion-tuning-' + alpha + '-' + gamma + '.nw')
+                    nwFileList.append(jobName + '-cation-tuning-' + alpha + '-' + gamma + '.nw')
+                    tmpNeutLines = [w.replace('ALPHA', alpha) for w in neutLines]
+                    tmpAnLines = [w.replace('ALPHA', alpha) for w in anLines]
+                    tmpCatLines = [w.replace('ALPHA', alpha) for w in catLines]
+                    tmpNeutLines = [w.replace('BETA', beta) for w in tmpNeutLines]
+                    tmpAnLines = [w.replace('BETA', beta) for w in tmpAnLines]
+                    tmpCatLines = [w.replace('BETA', beta) for w in tmpCatLines]
+                    tmpNeutLines = [w.replace('GAMMA', gamma) for w in tmpNeutLines]
+                    tmpAnLines = [w.replace('GAMMA', gamma) for w in tmpAnLines]
+                    tmpCatLines = [w.replace('GAMMA', gamma) for w in tmpCatLines]
+                    fNeut = open(nwFileList[0], 'w')
+                    fAn = open(nwFileList[1], 'w')
+                    fCat = open(nwFileList[2], 'w')
+                    for j in tmpNeutLines:
+                        fNeut.write(j)
+                    for j in tmpAnLines:
+                        fAn.write(j)
+                    for j in tmpCatLines:
+                        fCat.write(j)
+                    fNeut.close()
+                    fAn.close()
+                    fCat.close()
+                    #Now lets sgen
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[0] + ' -add ' + jobName + '-neutral-pbe0.movecs > /dev/null')
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[1] + ' -add ' + jobName + '-anion-pbe0.movecs > /dev/null')
+                    os.system('sgen.py -g -np ' + str(args.np[0]) + ' -t ' + str(args.t[0]) + ' ' + nwFileList[2] + ' -add ' + jobName + '-cation-pbe0.movecs > /dev/null')
+                    
     else:
         print('1D Tuning detected, generating jobs')
         alpha = str(args.a[0])
@@ -138,7 +230,6 @@ try:
             tmpNeutLines = [w.replace('GAMMA', gamma) for w in neutLines]
             tmpAnLines = [w.replace('GAMMA', gamma) for w in anLines]
             tmpCatLines = [w.replace('GAMMA', gamma) for w in catLines]
-            print(gamma)
             fNeut = open(nwFileList[0], 'w')
             fAn = open(nwFileList[1], 'w')
             fCat = open(nwFileList[2], 'w')
@@ -166,15 +257,34 @@ try:
         print ('NOSUB detected --> NW/Slurm files generated...exiting')
         sys.exit()
     else:
-        print('Submitting SLURM Tuning Jobs!')
-        for i in range(0, 11):
-            gamma = str(float(i)/20)
-            slurmFileList = []
-            slurmFileList.append(jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.slurm')
-            slurmFileList.append(jobName + '-anion-tuning-' + alpha + '-' + gamma + '.slurm')
-            slurmFileList.append(jobName + '-cation-tuning-' + alpha + '-' + gamma + '.slurm')
-            for j in slurmFileList:
-                os.system('sbatch ' + j)
+        if args.d[0] == 2:
+            if args.top:
+                for i in range(6, 11):
+                    for j in range(0, 11):
+                        alpha = str(float(i)/10)
+                        gamma = str(float(j)/20)
+                        os.system('sbatch ' + jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.slurm')
+                        os.system('sbatch ' + jobName + '-anion-tuning-' + alpha + '-' + gamma + '.slurm') 
+                        os.system('sbatch ' + jobName + '-cation-tuning-' + alpha + '-' + gamma + '.slurm') 
+            else:    
+                print('Submitting 2D SLURM Tuning Jobs!')
+                for i in range(0, 6):
+                    for j in range(0, 11):
+                        alpha = str(float(i)/10)
+                        gamma = str(float(j)/20)
+                        os.system('sbatch ' + jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.slurm')
+                        os.system('sbatch ' + jobName + '-anion-tuning-' + alpha + '-' + gamma + '.slurm') 
+                        os.system('sbatch ' + jobName + '-cation-tuning-' + alpha + '-' + gamma + '.slurm') 
+        else:
+            print('Submitting 1D SLURM Tuning Jobs!')
+            for i in range(0, 11):
+                gamma = str(float(i)/20)
+                slurmFileList = []
+                slurmFileList.append(jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.slurm')
+                slurmFileList.append(jobName + '-anion-tuning-' + alpha + '-' + gamma + '.slurm')
+                slurmFileList.append(jobName + '-cation-tuning-' + alpha + '-' + gamma + '.slurm')
+                for j in slurmFileList:
+                    os.system('sbatch ' + j)
 
 except (KeyboardInterrupt):
   print ('Keyboard interrupt. Aborting')

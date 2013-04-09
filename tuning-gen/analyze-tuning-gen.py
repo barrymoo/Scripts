@@ -25,8 +25,77 @@ try:
     jobName = fileName.split('-')[0]
     fileList = []
     if args.d[0] == 2:
-        print('Two dimensional tuning not yet supported, contact barrymoo@buffalo.edu')
-        sys.exit()
+        fOut = open(jobName + '.dat', 'w')
+        for i in range(0, 11):
+            for j in range(0, 11):
+                alpha = str(float(i)/10)
+                beta = str(1.0 - float(alpha))
+                gamma = str(float(j)/20)
+                neutFileName = jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.out'
+                anFileName = jobName + '-anion-tuning-' + alpha + '-' + gamma + '.out'
+                catFileName = jobName + '-cation-tuning-' + alpha + '-' + gamma + '.out'
+                if i == 0 and j == 0:
+                    f = open(neutFileName, 'r')
+                    line = f.readline()
+                    homo = 0
+                    while line:
+                        if line.find('Occ=2.00') != -1:
+                            spLine = line.split()
+                            homo = spLine[1]
+                            if line.find('Occ=0.00') != -1:
+                                break
+                        line = f.readline()
+                    f.close()
+                #Now that we have the HOMO we can continue
+                anHomo = str(int(homo) + 1)
+                fn = open(neutFileName, 'r')
+                fa = open(anFileName, 'r')
+                fc = open(catFileName, 'r')
+                #Neutral Lines
+                line = fn.readline()
+                while line:
+                    if line.find('Total DFT') != -1:
+                        spLine = line.split()
+                        neutDftE = spLine[4].replace('D', 'E')
+                    if line.find(' ' + homo + ' ') != -1 and line.find('Occ=2.00') != -1:
+                        spLine = line.split()
+                        neutHomoE = spLine[3].split('=')[1].replace('D', 'E')
+                        break
+                    line = fn.readline()
+                fn.close()
+                #Anion Lines
+                line = fa.readline()
+                while line:
+                    if line.find('Total DFT') != -1:
+                        spLine = line.split()
+                        anDftE = spLine[4].replace('D', 'E')
+                    if line.find(' ' + anHomo + ' ') != -1 and line.find('Occ=1.00') != -1:
+                        spLine = line.split()
+                        if spLine[3] == 'E=':
+                            anHomoE = spLine[4].replace('D', 'E')
+                        else:
+                            anHomoE = spLine[3].split('=')[1].replace('D', 'E')
+                        break
+                    line = fa.readline()
+                fa.close()
+                #Cation Lines
+                line = fc.readline()
+                while line:
+                    if line.find('Total DFT') != -1:
+                        spLine = line.split()
+                        catDftE = spLine[4].replace('D', 'E')
+                        break
+                    line = fc.readline()
+                fc.close()
+                #Put it all together 
+                pOne = float(neutHomoE) + float(catDftE) - float(neutDftE)
+                pTwo = float(anHomoE) + float(neutDftE) - float(anDftE)
+                jSquared = 27.2116 ** 2 * (pOne ** 2 + pTwo ** 2)
+                fOut.write(alpha + ' ' + beta + ' ' + gamma + ' ' + neutHomoE + ' '
+                        + anHomoE + ' ' + neutDftE + ' ' + anDftE + ' ' + catDftE + ' '
+                        + str(jSquared) + '\n')
+        fOut.close()
+
     else:
         #First lets create the fileList and check to see if all the files exist
         for i in range(0, 11):
@@ -108,7 +177,7 @@ try:
             jSquared = 27.2116 ** 2 * (pOne ** 2 + pTwo ** 2)
             f.write(str(args.a[0]) + ' ' + str(1-args.a[0]) + ' ' + str(float(i)/20) + ' ' + neutHomoE[i] + ' '
                     + anHomoE[i] + ' ' + neutDftE[i] + ' ' + anDftE[i] + ' ' + catDftE[i] + ' '
-                    + str(jSquared) + ' ' + str(pOne) + ' ' + str(pTwo) + '\n')
+                    + str(jSquared) + '\n')
         f.close()
 
 except (KeyboardInterrupt):
