@@ -30,23 +30,86 @@ try:
     else:
         #First lets create the fileList and check to see if all the files exist
         for i in range(0, 11):
-            addFileName = jobName + '-neutral-' + str(args.a[0]) + '-' + str(float(i)/20) + '.out'
+            addFileName = jobName + '-neutral-tuning-' + str(args.a[0]) + '-' + str(float(i)/20) + '.out'
             fileList.append(addFileName)
         for i in range(0, 11):
-            addFileName = jobName + '-anion-' + str(args.a[0]) + '-' + str(float(i)/20) + '.out'
+            addFileName = jobName + '-anion-tuning-' + str(args.a[0]) + '-' + str(float(i)/20) + '.out'
             fileList.append(addFileName)
         for i in range(0, 11):
-            addFileName = jobName + '-cation-' + str(args.a[0]) + '-' + str(float(i)/20) + '.out'
+            addFileName = jobName + '-cation-tuning-' + str(args.a[0]) + '-' + str(float(i)/20) + '.out'
             fileList.append(addFileName)
         for i in fileList:
             if not os.path.isfile(i):
                 print('Error: missing file - ', i)
+        #First lets get the HOMO
+        f = open(fileList[0], 'r')
+        line = f.readline()
+        homo = 0
+        while line:
+            if line.find('Occ=2.00') != -1:
+                spLine = line.split()
+                homo = spLine[1]
+                if line.find('Occ=0.00') != -1:
+                    break
+            line = f.readline()
+        f.close()
+        #Now let's get all the data into appropriate lists
+        neutHomoE = []
+        anHomoE = []
+        neutDftE = []
+        anDftE = []
+        catDftE = []
         for i in range(0, 11):
-            #Get all output for neutral system
-        for i in range(11, 21):
-            #Get all output for anion system
-        for i in range(21, 33):
-            #Get all output for cation system
+            f = open(fileList[i], 'r')
+            line = f.readline()
+            while line:
+                if line.find('Total DFT') != -1:
+                    spLine = line.split()
+                    neutDftE.append(spLine[4].replace('D', 'E'))
+                if line.find(' ' + homo + ' ') != -1 and line.find('Occ=2.00') != -1:
+                    spLine = line.split()
+                    neutHomoE.append(spLine[3].split('=')[1].replace('D', 'E'))
+                    break
+                line = f.readline()
+            f.close()
+        for i in range(11, 22):
+            f = open(fileList[i], 'r')
+            line = f.readline()
+            while line:
+                anHomo = str(int(homo) + 1)
+                if line.find('Total DFT') != -1:
+                    spLine = line.split()
+                    anDftE.append(spLine[4].replace('D', 'E'))
+                if line.find(' ' + anHomo + ' ') != -1 and line.find('Occ=1.00') != -1:
+                    spLine = line.split()
+                    if spLine[3] == 'E=':
+                        anHomoE.append(spLine[4].replace('D', 'E'))
+                    else:
+                        anHomoE.append(spLine[3].split('=')[1].replace('D', 'E'))
+                    break
+                line = f.readline()
+            f.close()
+        for i in range(22, 33):
+            f = open(fileList[i], 'r')
+            line = f.readline()
+            while line:
+                if line.find('Total DFT') != -1:
+                    spLine = line.split()
+                    catDftE.append(spLine[4].replace('D', 'E'))
+                    break
+                line = f.readline()
+            f.close()
+        #Now we can put all the J^2 together
+        f = open(jobName + '.dat', 'w')
+        f.write('#Alpha Beta Gamma neutHomoE anHomoE neutDftE anDftE catDftE J^2(ev^2)\n')
+        for i in range(0, 11):
+            pOne = float(neutHomoE[i]) + float(catDftE[i]) - float(neutDftE[i])
+            pTwo = float(anHomoE[i]) + float(neutDftE[i]) - float(anDftE[i])
+            jSquared = 27.2116 ** 2 * (pOne ** 2 + pTwo ** 2)
+            f.write(str(args.a[0]) + ' ' + str(1-args.a[0]) + ' ' + str(float(i)/20) + ' ' + neutHomoE[i] + ' '
+                    + anHomoE[i] + ' ' + neutDftE[i] + ' ' + anDftE[i] + ' ' + catDftE[i] + ' '
+                    + str(jSquared) + ' ' + str(pOne) + ' ' + str(pTwo) + '\n')
+        f.close()
 
 except (KeyboardInterrupt):
   print ('Keyboard interrupt. Aborting')
