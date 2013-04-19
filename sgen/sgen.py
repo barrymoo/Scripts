@@ -45,10 +45,10 @@ if fileExt == 'nw':
     ofile.write('#!/bin/bash\n')
     if fileName == 'dplot':
         ofile.write('#SBATCH --time=1:00:00\n')
-        ofile.write('#SBATCH --tasks-per-node=1\n')
+        ofile.write('#SBATCH --ntasks-per-node=1\n')
     else:
         ofile.write('#SBATCH --time='+str(jobTime[0])+':00:00\n')
-        ofile.write('#SBATCH --tasks-per-node='+str(numProcs[0])+'\n')
+        ofile.write('#SBATCH --ntasks-per-node='+str(numProcs[0])+'\n')
     ofile.write('#SBATCH --nodes=1\n')
     if genComp is not True:
         ofile.write('#SBATCH --partition=jochena\n')
@@ -85,7 +85,7 @@ elif fileExt == 'adf':
     ofile.write('#!/bin/bash\n')
     ofile.write('#SBATCH --time=' + str(jobTime[0]) + ':00:00\n')
     ofile.write('#SBATCH --nodes=1\n')
-    ofile.write('#SBATCH --tasks-per-node=' + str(numProcs[0]) + '\n')
+    ofile.write('#SBATCH --ntasks-per-node=' + str(numProcs[0]) + '\n')
     if genComp is not True:
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
@@ -133,7 +133,7 @@ elif fileExt == 'com':
     ofile.write('#!/bin/bash\n')
     ofile.write('#SBATCH --time='+str(jobTime[0])+':00:00\n')
     ofile.write('#SBATCH --nodes=1\n')
-    ofile.write('#SBATCH --tasks-per-node='+str(numProcs[0])+'\n')
+    ofile.write('#SBATCH --ntasks-per-node='+str(numProcs[0])+'\n')
     if genComp is not True:
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
@@ -159,7 +159,7 @@ elif fileExt == 'qc':
     ofile.write('#!/bin/bash\n')
     ofile.write('#SBATCH --time=' + str(jobTime[0]) + ':00:00\n')
     ofile.write('#SBATCH --nodes=1\n')
-    ofile.write('#SBATCH --tasks-per-node=' + str(numProcs[0]) + '\n')
+    ofile.write('#SBATCH --ntasks-per-node=' + str(numProcs[0]) + '\n')
     if genComp is not True:
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
