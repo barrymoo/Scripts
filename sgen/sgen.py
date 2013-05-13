@@ -107,6 +107,7 @@ elif fileExt == 'adf':
     ofile.write('cd $SLURMTMPDIR\n')
     ofile.write('export LC_COLLATE=C\n')
     ofile.write('source ' + tagfile + '\n')
+    ofile.write('export SCM_TMPDIR=$SLURMTMPDIR\n')
     ofile.write('pwd\n')
     ofile.write('ulimit\n')
     ofile.write('date\n')
