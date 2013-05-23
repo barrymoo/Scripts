@@ -36,7 +36,7 @@ program nlmotrans
  narg = iargc()
 
  if ( narg .lt. 2 .or. narg .gt. 2 ) then
-  stop 'Usage: ./nw-nlmo-transitions nbodata.47 nwchem.civecs'
+  stop 'Usage: ./nw-nlmo-transitions MOsinNLMO(nbodata.47) nwchem.civecs'
  end if
 
  ! the first cube file in the list is special in the sense that
