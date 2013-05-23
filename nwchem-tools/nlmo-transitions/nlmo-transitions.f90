@@ -67,6 +67,7 @@ program nlmotrans
  read(inciv,*) ! frozen cores
  read(inciv,*) ! frozen virtuals
  read(inciv,*) nov
+ read(inciv,*) ! empty line
       
  ! A quick bit of math here:
  
@@ -109,13 +110,12 @@ program nlmotrans
  allocate(tmxpy(nvir,nocc,nex),tmxmy(nvir,nocc,nex),g_x(nex,nov),g_y(nex,nov))
   
  do iex = 1,nex
+  read(inciv,*) dummy !Contains excitation energy which we don't need
   do j=1,nov
-    read (inciv,*) g_x(iex,j)
+   read (inciv,*) g_x(iex,j)
   enddo
- end do ! iex
- do iex = 1,nex
   do j=1,nov
-    read (inciv,*) g_y(iex,j)
+   read (inciv,*) g_y(iex,j)
   enddo
  end do ! iex
  
@@ -133,8 +133,8 @@ program nlmotrans
    do iocc = 1,nocc
      do jvir = 1,nvir
           ll=ll+1
-          tmxpy(jvir,iocc,iex)=g_x(iex,ll)+g_y(iex,ll)
-          tmxmy(jvir,iocc,iex)=g_x(iex,ll)-g_y(iex,ll)
+          tmxpy(jvir,iocc,iex)=g_x(iex,ll)!+g_y(iex,ll)
+          tmxmy(jvir,iocc,iex)=g_y(iex,ll)!g_x(iex,ll)-g_y(iex,ll)
      end do ! jvir
     end do ! iocc
  end do ! iex
@@ -286,13 +286,13 @@ program nlmotrans
  
     end if ! slow
        
-    write (iuout,'(/1X,a)') 'NLMO Analysis (5% or greater)'
+    write (iuout,'(/1X,a)') 'NLMO Analysis (greater than 0.05%)'
     rtemp = zero
     do jvir = 1,nvir
        do iocc = 1,nocc
           contrib = xpynlmo(jvir,iocc)*xmynlmo(jvir,iocc) 
           rtemp = rtemp + contrib
-          if (abs(contrib).ge.0.05) then
+          if (abs(contrib).gt.0.0005) then
              write (iuout,'(1X,a,i5,a,i5,a,f8.2,a)') &
                   'occ ',iocc,' -> vir ', jvir+nocc,' :',(contrib*100d0),'%'
           end if

@@ -28,7 +28,8 @@ BIN = nlmo-transitions
 #OBJ = snafu.o rho.o quadrature_new.o ryspol.o ovrlap.o kinetic.o b3lypxc.o \
       pbexc.o fockmatrix.o xalpha.o vwn5.o b88.o
 
-OBJ90 = vartypes.o write-matrices.o csgeti.o  contns.o csbegn.o nlmo-transitions.o 
+###OBJ90 = vartypes.o write-matrices.o csgeti.o  contns.o csbegn.o nlmo-transitions.o 
+OBJ90 = vartypes.o nlmo-transitions.o 
 
 .F.o:
 	$(FC) $(FOPT) -c $< -o $@
