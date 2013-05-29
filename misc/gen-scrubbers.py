@@ -24,5 +24,5 @@ else:
         f.write('#SBATCH --error=/dev/null\n')
         f.write('#SBATCH --mail-type=END\n')
         f.write('#SBATCH --nodelist=' + i + '\n')
-        f.write('/ifs/projects/jochena/shared/software/barrymoo-scripts/misc/scrubber.py\n')
+        f.write('scrubber.py\n')
         f.close()
