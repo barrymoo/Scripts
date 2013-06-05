@@ -24,5 +24,6 @@ else:
         f.write('#SBATCH --error=/dev/null\n')
         f.write('#SBATCH --mail-type=END\n')
         f.write('#SBATCH --nodelist=' + i + '\n')
+        f.write('export PATH=$PATH:/projects/jochena/shared/software/barrymoo-scripts/misc\n')
         f.write('scrubber.py\n')
         f.close()
