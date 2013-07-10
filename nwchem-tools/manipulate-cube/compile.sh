@@ -1,3 +1,3 @@
 #!/bin/bash
 
-f2py -c -m subroutines filefile.f90 filescalar.f90
+f2py -c -m subroutines cubcub.f90 cubscalar.f90

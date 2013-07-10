@@ -1,11 +1,11 @@
-subroutine filescalar(file1, num, operation)
+subroutine cubscalar(cub1, scalar, operation)
     implicit none    
-    character(len=255) :: file1
+    character(len=255) :: cub1
     character(len=3) :: operation
     integer :: fin=11, fout=12
-    real :: num
+    real :: scalar
     !Let's get data from file1
-    open(fin, file=file1, status='old', ERR=7000)
+    open(fin, file=cub1, status='old', ERR=7000)
     close(fin)
     !Now we can create output
     write(*,*) 'Hello from scalar!'
@@ -13,4 +13,4 @@ subroutine filescalar(file1, num, operation)
 go to 7001
 7000 stop 'Error in file'    
 7001 continue
-end subroutine filescalar      
+end subroutine
