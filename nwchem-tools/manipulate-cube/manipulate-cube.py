@@ -22,6 +22,7 @@ try:
     group.add_argument('-div', action='store_true', help='Div cubefile1 by cubefile2/scalar')
     group.add_argument('-exp', action='store_true', help='Take cubefile1 to cubefile2/scalar power')
     group.add_argument('-abs', action='store_true', help='Take absolute value of cubefile1, must be a scalar value in second position')
+    group.add_argument('-int', action='store_true', help='Integrate cubefile1')
     args = parser.parse_args()
 
     #Check for proper usage
@@ -51,9 +52,10 @@ try:
     elif args.abs:
         operation = 'abs'
         value = 0
+    elif args.int:
+        operation = 'int'
+        value = 0
    
-    print(args.cubefile1, args.cubefile2, operation)
-
     #Now we call proper subroutine
     if value != None: 
         subroutines.cubscalar(args.cubefile1, value, operation)
