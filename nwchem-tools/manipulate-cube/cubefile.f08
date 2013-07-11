@@ -61,28 +61,28 @@ module cubefile
         !Now we can process our operation, we can store in cube1 vector
         select case (operation)
             case ('add')
-                print *, 'Adding cube files!'
+                print *, 'Adding ', TRIM(cub1), ' and ', TRIM(cub2), ' > result.cube'
                 do i=1, npts(3)
                     do j=1, npts(2)
                         cube1(i,j,:)=cube1(i,j,:)+cube2(i,j,:)   
                     end do
                 end do
             case ('sub')
-                print *, 'Subtracting cube files!'
+                print *, 'Subtracting ', TRIM(cub2), ' from ', TRIM(cub1), '> result.cube'
                 do i=1, npts(3)
                     do j=1, npts(2)
                         cube1(i,j,:)=cube1(i,j,:)-cube2(i,j,:)   
                     end do
                 end do
             case ('mul')
-                print *, 'Multiply cube files!'
+                print *, 'Multipling ', TRIM(cub1), ' and ', TRIM(cub2), ' > result.cube' 
                 do i=1, npts(3)
                     do j=1, npts(2)
                         cube1(i,j,:)=cube1(i,j,:)*cube2(i,j,:)   
                     end do
                 end do
             case ('div')
-                print *, 'Divide cube files!'
+                print *, 'Dividing ', TRIM(cub1), ' by ', TRIM(cub2), ' > result.cube'
                 do i=1, npts(3)
                     do j=1, npts(2)
                         do k=1, npts(1)
@@ -95,7 +95,7 @@ module cubefile
                     end do
                 end do
             case ('exp')
-                print *, 'cube1 ^ cube2!'
+                print *, 'Taking ', TRIM(cub1), ' to the ', TRIM(cub2), "'th power > result.cube"
                 do i = 1, npts(3)
                     do j = 1, npts(2)
                         cube1(i,j,:)=cube1(i,j,:)**cube2(i,j,:)   
@@ -175,28 +175,28 @@ module cubefile
         !Now we can process our operation, we can store in cube1 vector
         select case (operation)
             case ('add')
-                print *, 'Adding scalar to cubefile!'
+                print *, 'Adding ', scalar, ' to ', TRIM(cub1), ' > result.cube'
                 do i=1, npts(3)
                     do j=1, npts(2)
                         cube1(i,j,:)=cube1(i,j,:)+scalar
                     end do
                 end do
             case ('sub')
-                print *, 'Subtracting scalar from cubefile!'
+                print *, 'Subtracting ', scalar, ' from ', TRIM(cub1), ' > result.cube'
                 do i=1, npts(3)
                     do j=1, npts(2)
                         cube1(i,j,:)=cube1(i,j,:)-scalar
                     end do
                 end do
             case ('mul')
-                print *, 'Multiply cube files!'
+                print *, 'Multiplying ', TRIM(cub1), ' by ', scalar, ' > result.cube'
                 do i=1, npts(3)
                     do j=1, npts(2)
                         cube1(i,j,:)=cube1(i,j,:)*scalar
                     end do
                 end do
             case ('div')
-                print *, 'Divide cube files!'
+                print *, 'Dividing ', TRIM(cub1), ' by ', scalar, ' > result.cube'
                 do i=1, npts(3)
                     do j=1, npts(2)
                         do k=1, npts(1)
@@ -209,21 +209,21 @@ module cubefile
                     end do
                 end do
             case ('exp')
-                print *, 'cube1 ^ cube2!'
+                print *, 'Taking ', TRIM(cub1), ' to the ', scalar, "'th power > result.cube"
                 do i = 1, npts(3)
                     do j = 1, npts(2)
                         cube1(i,j,:)=cube1(i,j,:)**scalar  
                     end do
                 end do
             case ('abs')
-                print *, 'Absolute value of cube1!'
+                print *, 'Taking the absolute value of ', TRIM(cub1), ' > result.cube'
                 do i = 1, npts(3)
                     do j = 1, npts(2)
                         cube1(i,j,:)=abs(cube1(i,j,:))
                     end do
                 end do
             case ('int')
-                print *, 'Integrate cube1!'
+                print *, 'Integrating ', TRIM(cub1)
                 dxyz=ptvec(1,1)*ptvec(2,2)*ptvec(3,3)
                 integration=0
                 do i = 1, npts(3)
@@ -237,7 +237,7 @@ module cubefile
         end select
     
         if (operation == 'int') then
-            print *, 'Integrated cube:', integration
+            print *, 'Integrated cube value ->', integration
         else
             !Lets write a new output file, result.cube
             open(fout, file='result.cube', status='unknown')
