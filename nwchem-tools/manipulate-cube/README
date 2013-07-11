@@ -3,20 +3,23 @@ Manipulate cube files!
 This program can add, subtract, multiply, divide, and exponentiate cube files with another cube file or a scalar
 It can also integrate and take the absolute value of cube files.
 
-You will need to have f2py and python installed!
-Use the compile.sh script to compile subroutines for python program
+Use the compile.sh script to compile program (requires gfortran, change compiler to suit needs)
 
 Examples of usage:
-manipulate-cube.py orbital1.cube orbital2.cube -add
+manipulate-cube orbital1.cube orbital2.cube -add
 
-manipulate-cube.py orbital1.cube orbital1.cube -mul
+manipulate-cube orbital1.cube --mul orbital1.cube
 
-manipulate-cube.py orbital1.cube 10 -mul
+manipulate-cube -subtract orbital1.cube orbital1.cube
 
-manipulate-cube.py orbital1.cube -int
+manipulate-cube orbital1.cube --multiply 10
 
-manipulate-cube.py orbital1.cube -abs
+manipulate-cube -int orbital1.cube
+
+manipulate-cube -abs orbital1.cube
 
 Some cautionary notes:
-1) If you put the operation before the cubefiles, or in between, this will not work. Argparse can be finicky!
-2) If you try to divide by zero, the program will ignore it and place a 0.0 in the output cube file.
+1) Dividing two cubefiles is a dangerous operation. If you try to divide by zero it will skip the operation and set the point to zero.
+2) Running the following:
+    manipulate-cube -int orbital1.cube orbital2.cube
+This will only integrate the first cube file on the command line! The second is completely ignored.

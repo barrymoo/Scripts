@@ -2,7 +2,6 @@
 import argparse
 import os
 scriptDir = os.getcwd()
-print(scriptDir)
 import sys
 sys.path.append(scriptDir)
 import subroutines
