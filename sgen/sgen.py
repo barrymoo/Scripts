@@ -69,7 +69,7 @@ if fileExt == 'nw':
             ofile.write('sbcast $SLURM_SUBMIT_DIR/' +
                         addFileList[i] + ' $SLURMTMPDIR/' +
                         addFileList[i]+'\n')
-    ofile.write('mpirun -np $NPROCS $NWCHEM_EXEC $SLURMTMPDIR/' + inpFile + '\n')
+    ofile.write('mpiexec.hydra -np $NPROCS $NWCHEM_EXEC $SLURMTMPDIR/' + inpFile + '\n')
     ofile.write('cp *movecs $SLURM_SUBMIT_DIR\n')
     ofile.write('cp *civecs* $SLURM_SUBMIT_DIR\n')
     ofile.write('cp *gen $SLURM_SUBMIT_DIR\n')
