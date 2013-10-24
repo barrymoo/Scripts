@@ -53,6 +53,9 @@ if fileExt == 'nw':
     if genComp is not True:
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
+    else:
+        ofile.write('#SBATCH --account=jochena\n')
+        ofile.write('#SBATCH --partition=general-compute\n')
     ofile.write('#SBATCH --job-name=' + fileName + '\n')
     ofile.write('#SBATCH --output=' + fileName + '.out\n')
     ofile.write('#SBATCH --mail-type=END\n')
@@ -89,6 +92,9 @@ elif fileExt == 'adf':
     if genComp is not True:
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
+    else:
+        ofile.write('#SBATCH --account=jochena\n')
+        ofile.write('#SBATCH --partition=general-compute\n')
     ofile.write('#SBATCH --job-name=' + fileName + '\n')
     ofile.write('#SBATCH --output=' + fileName + '.out\n')
     ofile.write('#SBATCH --mail-type=END\n')
@@ -138,6 +144,9 @@ elif fileExt == 'com':
     if genComp is not True:
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
+    else:
+        ofile.write('#SBATCH --account=jochena\n')
+        ofile.write('#SBATCH --partition=general-compute\n')
     ofile.write('#SBATCH --job-name=' + fileName + '\n')
     ofile.write('#SBATCH --output=' + fileName + '.out\n')
     ofile.write('#SBATCH --mail-type=END\n')
@@ -153,6 +162,7 @@ elif fileExt == 'com':
     ofile.write('sbcast $SLURM_SUBMIT_DIR/' + inpFile +
                 ' $SLURMTMPDIR/' + inpFile + '\n')
     ofile.write('g09 < ' + inpFile + '\n')
+    ofile.write('cp *chk $SLURM_SUBMIT_DIR\n')
 elif fileExt == 'qc':
     print('I found a QChem input --> Processing')
     tagfile = os.environ['QCHEM_TAG_FILE']
@@ -164,6 +174,9 @@ elif fileExt == 'qc':
     if genComp is not True:
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
+    else:
+        ofile.write('#SBATCH --account=jochena\n')
+        ofile.write('#SBATCH --partition=general-compute\n')
     ofile.write('#SBATCH --job-name=' + fileName + '\n')
     ofile.write('#SBATCH --output=' + fileName + '.out\n')
     ofile.write('#SBATCH --mail-type=END\n')

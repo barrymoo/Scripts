@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <Eigen/Core>
 #include <Eigen/Dense>
 
 using namespace std;
@@ -138,13 +139,27 @@ int main(int argc, char *argv[]){
             }
             for(int j=0; j<nroots; j++){
                 cout << "\t-- Root " << j+1 << " --" << endl;
-                for(int k=0; k<nocc(i); k++){
-                    for(int l=0; l<nvir(i); l++){
-                        offset=k*nvir(0)+l;
-                        contrib=xpy[i](j, offset)*xmy[i](j, offset);
-                        ctot+=contrib;
-                        if(contrib >= 0.05){
-                            cout << "\t\tocc " << k+1 << " -> vir " << nocc(i)+l+1 << " : " << contrib*100 << "%" << endl;
+                if(tda == 'F'){ //RPA BLOCK
+                    for(int k=0; k<nocc(i); k++){
+                        for(int l=0; l<nvir(i); l++){
+                            offset=k*nvir(0)+l;
+                            contrib=xpy[i](j, offset)*xmy[i](j, offset);
+                            ctot+=contrib;
+                            if(contrib >= 0.05){
+                                cout << "\t\tocc " << k+1 << " -> vir " << nocc(i)+l+1 << " : " << contrib*100 << "%" << endl;
+                            }
+                        }
+                    }
+                }
+                else{ //TDA BLOCK
+                    for(int k=0; k<nocc(i); k++){
+                        for(int l=0; l<nvir(i); l++){
+                            offset=k*nvir(0)+l;
+                            contrib=xpy[i](j, offset)*xpy[i](j, offset);
+                            ctot+=contrib;
+                            if(contrib >= 0.05){
+                                cout << "\t\tocc " << k+1 << " -> vir " << nocc(i)+l+1 << " : " << contrib*100 << "%" << endl;
+                            }
                         }
                     }
                 }
@@ -195,7 +210,7 @@ int main(int argc, char *argv[]){
                 for(int i=0; i<nvir(0); i++){
                     for(int j=0; j<nocc(0); j++){
                         contrib = xpynbo(i, j) * xmynbo(i, j);
-                        if(contrib >= 0.0005){
+                        if(contrib >= 0.05){
                             cout << "\t\tocc " << j+1 << " -> vir " << nocc(0)+i+1 << " : " << contrib*100 << "%" << endl;
                         }
                         ctot += contrib;

@@ -3,4 +3,4 @@ OBJ=transition-analyze.cpp
 EIGEN=/usr/include/eigen3
 
 $(EXE):$(OBJ)
-	g++ -I $(EIGEN) -fopenmp $< -o $@
+	g++ -I $(EIGEN) $< -o $@
