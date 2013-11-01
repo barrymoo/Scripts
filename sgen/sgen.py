@@ -52,7 +52,7 @@ if fileExt == 'nw':
         ofile.write('#SBATCH --time=1:00:00\n')
         ofile.write('#SBATCH --ntasks-per-node=1\n')
     else:
-        ofile.write('#SBATCH --time='+str(jobTime[0])+':00:00\n')
+        ofile.write('#SBATCH --time='+str(jobTime)+':00:00\n')
         ofile.write('#SBATCH --ntasks-per-node='+str(numProcs[0])+'\n')
     ofile.write('#SBATCH --nodes=1\n')
     if genComp is not True:
@@ -91,7 +91,7 @@ elif fileExt == 'adf':
     tagfile = os.environ['ADF_TAG_FILE']
     ofile = open(fileName + '.slurm', 'w')
     ofile.write('#!/bin/bash\n')
-    ofile.write('#SBATCH --time=' + str(jobTime[0]) + ':00:00\n')
+    ofile.write('#SBATCH --time=' + str(jobTime) + ':00:00\n')
     ofile.write('#SBATCH --nodes=1\n')
     ofile.write('#SBATCH --ntasks-per-node=' + str(numProcs[0]) + '\n')
     if genComp is not True:
@@ -143,7 +143,7 @@ elif fileExt == 'com':
     tagfile = os.environ['G09_TAG_FILE']
     ofile = open(fileName+'.slurm', 'w')
     ofile.write('#!/bin/bash\n')
-    ofile.write('#SBATCH --time='+str(jobTime[0])+':00:00\n')
+    ofile.write('#SBATCH --time='+str(jobTime)+':00:00\n')
     ofile.write('#SBATCH --nodes=1\n')
     ofile.write('#SBATCH --ntasks-per-node='+str(numProcs[0])+'\n')
     if genComp is not True:
@@ -173,7 +173,7 @@ elif fileExt == 'qc':
     tagfile = os.environ['QCHEM_TAG_FILE']
     ofile = open(fileName+'.slurm', 'w')
     ofile.write('#!/bin/bash\n')
-    ofile.write('#SBATCH --time=' + str(jobTime[0]) + ':00:00\n')
+    ofile.write('#SBATCH --time=' + str(jobTime) + ':00:00\n')
     ofile.write('#SBATCH --nodes=1\n')
     ofile.write('#SBATCH --ntasks-per-node=' + str(numProcs[0]) + '\n')
     if genComp is not True:
