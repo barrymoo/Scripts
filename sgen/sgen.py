@@ -27,7 +27,7 @@ args = parser.parse_args()
 #Set some variables
 inpFile = args.infile
 numProcs = args.np
-jobTime = args.t
+jobTime = args.t[0]
 genComp = args.g
 if jobTime == 0 and genComp == True:
     jobTime = 72
