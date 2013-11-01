@@ -17,7 +17,7 @@ parser.add_argument('infile', help='QM Job File-Supports' +
 parser.add_argument('-np', metavar='N', type=int, nargs=1,
                     default=[1], help='Number of processors')
 parser.add_argument('-t', metavar='N', type=int, nargs=1,
-                    default=[2000], help='Job Time(hours)')
+                    default=[0], help='Job Time(hours)')
 parser.add_argument('-add', metavar='F', type=str, nargs='*',
                     default=[0], help='Additional Job Files')
 parser.add_argument('-g', action='store_true',
@@ -29,6 +29,11 @@ inpFile = args.infile
 numProcs = args.np
 jobTime = args.t
 genComp = args.g
+if jobTime == 0 and genComp == True:
+    jobTime = 72
+else:
+    jobTime = 2000
+
 addFileList = args.add
 fileName, fileExt = os.path.splitext(inpFile)
 fileExt = fileExt.strip('.')
