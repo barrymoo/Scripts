@@ -31,7 +31,7 @@ jobTime = args.t[0]
 genComp = args.g
 if jobTime == 0 and genComp == True:
     jobTime = 72
-else:
+elif jobTime == 0 and genComp == False:
     jobTime = 2000
 
 addFileList = args.add
