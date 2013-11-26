@@ -4,7 +4,7 @@
 #include <random>
 #include <ctime>
 #include <unsupported/Eigen/MatrixFunctions>
-#include "CubeFile.cpp"
+#include "CubeFile.h"
 
 using namespace Eigen;
 using namespace std;
@@ -37,17 +37,15 @@ int main(int argc, char *argv[]){
         MatrixXd W = MatrixXd::Random(n, n);
         MatrixXd U = MatrixXd::Zero(n, n);
         //Make Random Matrix Antisymmetric
-        for(int i=0; i < n; i++){
-            for(int j=0; j < i; j++){
-                W(j, i) = -W(i, j);
-            }
-        }
-        //Set Diagonal Components to Zero
-        for(int j=0; j < n; j++){
-            W(j, j) = 0;
-        }
+        U = W.transpose();
+        W -= U;
+        //Generate Unitary Transformation Matrix
         U = W.exp();
-        cout << U * U.transpose() << '\n';
+        //Print out W and U for user!
+        cout << "---> W <---\n" << W << "\n---> End W <---\n";
+        cout << "---> U <---\n" << U << "\n---> End U <---\n";
+        //Now Let's Calculate the Overlap matrix
+        cout << get_overlap(cubeObjs[0], cubeObjs[1]) << '\n';
     }
     catch (exception &ex)
     {
