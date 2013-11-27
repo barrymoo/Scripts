@@ -131,6 +131,7 @@ module cubefile
     7001 stop "Can't open cubefile2, does it exist?"
     7005 stop "Error processing cubefile1!"
     7006 stop "Error processing cubefile2, is it the same size as cubefile1?"
+    7007 stop "Error Here!"
     7010 continue
     end subroutine
 

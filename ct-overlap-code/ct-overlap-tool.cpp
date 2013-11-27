@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
         //For each cube, store in a CubeFile object vector where they will be stored for unitary transformation
         vector <CubeFile> cubeObjs(n);
         for(int i=0; i < n; i++){
-            cubeObjs[i].set(cubeFiles[i]);
+            cubeObjs[i].read(cubeFiles[i]);
         }
         //Now lets create a (U)nitary transformation matrix from a random antisymmetric matrix W
         initialize_random_number_generator();
@@ -44,8 +44,7 @@ int main(int argc, char *argv[]){
         //Print out W and U for user!
         cout << "---> W <---\n" << W << "\n---> End W <---\n";
         cout << "---> U <---\n" << U << "\n---> End U <---\n";
-        //Now Let's Calculate the Overlap matrix
-        cout << get_overlap(cubeObjs[0], cubeObjs[1]) << '\n';
+        cubeObjs[0].write("check.cube");
     }
     catch (exception &ex)
     {

@@ -1,30 +1,45 @@
 #include <string>
+#include <vector>
+#include <array>
+#include <ios>
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <Eigen/Core>
 
-using namespace Eigen;
 using namespace std;
+
+//Necessary typedefs and structures
+typedef array <double, 3> Vector3d;
+typedef array <int, 3> Vector3i;
+typedef array <Vector3d, 3> Matrix3d;
+struct Geometry{
+    int atomicNum;
+    double atomicMass;
+    Vector3d xyzVec;
+};
 
 //Class for CubeFiles
 class CubeFile{
     private:
         int nAtoms;
-        Array3d startGridPt;
-        Array3d numGridPts;
-        ArrayXXd gridVec = ArrayXXd::Zero(3, 3);
+        Vector3d startGridPt;
+        Vector3i numGridPts;
+        Matrix3d gridVec;
         double intStep;
-        ArrayXi atomicNum;
-        ArrayXd atomicMass;
-        ArrayXXd geometry;
-        ArrayXd cube;
+        vector <Geometry> geom;
+        vector <double> cubeVals;
     public:
-        void set(string filename);
+        CubeFile();
+        CubeFile(const string &filename);
+        CubeFile(const CubeFile &A);
+        void read(const string &filename);
+        void write(const string &filename);
+        void copy(const CubeFile &A);
+        void initialize(const CubeFile &A);
         double integrate();
         void print();        
-        friend double get_overlap(const CubeFile &A, const CubeFile &B);
+        friend double return_overlap(const CubeFile &A, const CubeFile &B);
 };
 
 //Prototypes
-double get_overlap(const CubeFile &A, const CubeFile &B);
+double return_overlap(const CubeFile &A, const CubeFile &B);
