@@ -1,5 +1,12 @@
 #include "CubeFile.h"
 
+/*
+ * CubeFile Class written by Barry Moore
+ * No Warranty Implied
+ * Things to update:
+ * 1) Stringstreams can become fstreams
+*/
+
 using namespace std;
 
 //Misc. Functions
@@ -133,4 +140,34 @@ void CubeFile::print(){
 double return_overlap(const CubeFile &A, const CubeFile &B){
     //Do Something
     return 1.0;
+}
+
+CubeFile scalar_add(const CubeFile &A, const double &scalar){
+    CubeFile B(A);
+    for(int i=0; i<B.cubeVals.size(); i++){
+        B.cubeVals[i] += scalar;
+    }
+    return B;
+}
+
+CubeFile scalar_subtract(const CubeFile &A, const double &scalar){
+    double val = -1.0 * scalar;
+    return scalar_add(A, val);
+}
+
+CubeFile scalar_multiply(const CubeFile &A, const double &scalar){
+    CubeFile B(A);
+    for(int i=0; i<B.cubeVals.size(); i++){
+        B.cubeVals[i] *= scalar;
+    }
+    return B;
+}
+
+CubeFile scalar_divide(const CubeFile &A, const double &scalar){
+    //Need div by 0 exception
+    if(scalar == 0.0){
+        throw runtime_error("Attempting to use CubeFile::scalar_divide with Zero");
+    } 
+    double val = 1.0 / scalar;
+    return scalar_multiply(A, val);
 }

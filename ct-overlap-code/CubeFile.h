@@ -39,7 +39,15 @@ class CubeFile{
         double integrate();
         void print();        
         friend double return_overlap(const CubeFile &A, const CubeFile &B);
+        friend CubeFile scalar_add(const CubeFile &A, const double &scalar);
+        friend CubeFile scalar_subtract(const CubeFile &A, const double &scalar);
+        friend CubeFile scalar_multiply(const CubeFile &A, const double &scalar);
+        friend CubeFile scalar_divide(const CubeFile &A, const double &scalar);
 };
 
 //Prototypes
 double return_overlap(const CubeFile &A, const CubeFile &B);
+CubeFile scalar_add(const CubeFile &A, const double &scalar);
+CubeFile scalar_subtract(const CubeFile &A, const double &scalar);
+CubeFile scalar_multiply(const CubeFile &A, const double &scalar);
+CubeFile scalar_divide(const CubeFile &A, const double &scalar);

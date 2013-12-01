@@ -44,7 +44,9 @@ int main(int argc, char *argv[]){
         //Print out W and U for user!
         cout << "---> W <---\n" << W << "\n---> End W <---\n";
         cout << "---> U <---\n" << U << "\n---> End U <---\n";
-        cubeObjs[0].write("check.cube");
+        CubeFile A;
+        A = scalar_divide(cubeObjs[0], 0);
+        A.write("A.cube");
     }
     catch (exception &ex)
     {
