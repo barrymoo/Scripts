@@ -25,10 +25,11 @@ void unitary_transformation(const int n, const MatrixXd &U, const vector <CubeFi
         for(size_t i=0; i<N; i++) abprime[i].zero_cubeVals();    
 
         //Now generate the new cube files
-        for(size_t i=0; i<N; i++){
-            for(size_t j=0; j<N; j++){
+        for(size_t i=0; i<N; i++){ //Goes over the N vector CubeFile Array
+            for(size_t j=0; j<N; j++){ //Goes over the j index of U
                 abprime[i] += ab[i] * U(i, j);
             }
+            abprime[i] /= sqrt(N); 
         }
     }
 }

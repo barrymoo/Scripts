@@ -1,5 +1,5 @@
 CXX=g++
-FLAGS=-Wall -O2 -std=c++11
+FLAGS=-Wall -O2 -std=c++11 -lrt
 LIBRARY=-I/usr/include/eigen3
 TARGET=ct-overlap-tool
 SOURCE=ct-overlap-tool.cpp CubeFile.cpp
