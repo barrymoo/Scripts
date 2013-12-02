@@ -137,6 +137,11 @@ void CubeFile::print(){
     cout << '\n';
 }
 
+/*
+ *
+ * Friend Function Definitions
+ *
+*/
 double return_overlap(const CubeFile &A, const CubeFile &B){
     //Do Something
     return 1.0;
@@ -170,4 +175,39 @@ CubeFile scalar_divide(const CubeFile &A, const double &scalar){
     } 
     double val = 1.0 / scalar;
     return scalar_multiply(A, val);
+}
+
+CubeFile cube_add(const CubeFile &A, const CubeFile &B){
+    CubeFile C;
+    C.initialize(A);
+    for(int i=0; i<C.cubeVals.size(); i++){
+        C.cubeVals[i] = A.cubeVals[i] + B.cubeVals[i];
+    }
+    return C;
+}
+
+CubeFile cube_subtract(const CubeFile &A, const CubeFile &B){
+    CubeFile C;
+    C.initialize(A);
+    for(int i=0; i<C.cubeVals.size(); i++){
+        C.cubeVals[i] = A.cubeVals[i] - B.cubeVals[i];
+    }
+    return C;
+}
+
+CubeFile cube_multiply(const CubeFile &A, const CubeFile &B){
+    CubeFile C;
+    C.initialize(A);
+    for(int i=0; i<C.cubeVals.size(); i++){
+        C.cubeVals[i] = A.cubeVals[i] * B.cubeVals[i];
+    }
+    return C;
+}
+
+CubeFile cube_abs(const CubeFile &A){
+    CubeFile C(A);
+    for(int i=0; i<C.cubeVals.size(); i++){
+        C.cubeVals[i] = abs(C.cubeVals[i]);
+    }
+    return C;
 }

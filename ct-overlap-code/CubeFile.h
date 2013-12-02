@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 
 using namespace std;
 
@@ -43,11 +44,19 @@ class CubeFile{
         friend CubeFile scalar_subtract(const CubeFile &A, const double &scalar);
         friend CubeFile scalar_multiply(const CubeFile &A, const double &scalar);
         friend CubeFile scalar_divide(const CubeFile &A, const double &scalar);
+        friend CubeFile cube_add(const CubeFile &A, const CubeFile &B);
+        friend CubeFile cube_subtract(const CubeFile &A, const CubeFile &B);
+        friend CubeFile cube_multiply(const CubeFile &A, const CubeFile &B);
+        friend CubeFile cube_abs(const CubeFile &A);
 };
 
-//Prototypes
+//Prototypes for friend function definitions
 double return_overlap(const CubeFile &A, const CubeFile &B);
 CubeFile scalar_add(const CubeFile &A, const double &scalar);
 CubeFile scalar_subtract(const CubeFile &A, const double &scalar);
 CubeFile scalar_multiply(const CubeFile &A, const double &scalar);
 CubeFile scalar_divide(const CubeFile &A, const double &scalar);
+CubeFile cube_add(const CubeFile &A, const CubeFile &B);
+CubeFile cube_subtract(const CubeFile &A, const CubeFile &B);
+CubeFile cube_multiply(const CubeFile &A, const CubeFile &B);
+CubeFile cube_abs(const CubeFile &A);
