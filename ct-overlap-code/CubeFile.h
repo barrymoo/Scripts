@@ -11,7 +11,7 @@ using namespace std;
 
 //Necessary typedefs and structures
 typedef array <double, 3> Vector3d;
-typedef array <int, 3> Vector3i;
+typedef array <unsigned int, 3> Vector3i;
 typedef array <Vector3d, 3> Matrix3d;
 struct Geometry{
     int atomicNum;
@@ -30,33 +30,58 @@ class CubeFile{
         vector <Geometry> geom;
         vector <double> cubeVals;
     public:
-        CubeFile();
+        //Constructors
+        CubeFile(void);
         CubeFile(const string &filename);
         CubeFile(const CubeFile &A);
+        //Member Functions
         void read(const string &filename);
-        void write(const string &filename);
+        void write(const string &filename) const;
         void copy(const CubeFile &A);
-        void initialize(const CubeFile &A);
-        double integrate();
-        void print();        
-        friend double return_overlap(const CubeFile &A, const CubeFile &B);
-        friend CubeFile scalar_add(const CubeFile &A, const double &scalar);
-        friend CubeFile scalar_subtract(const CubeFile &A, const double &scalar);
-        friend CubeFile scalar_multiply(const CubeFile &A, const double &scalar);
-        friend CubeFile scalar_divide(const CubeFile &A, const double &scalar);
-        friend CubeFile cube_add(const CubeFile &A, const CubeFile &B);
-        friend CubeFile cube_subtract(const CubeFile &A, const CubeFile &B);
-        friend CubeFile cube_multiply(const CubeFile &A, const CubeFile &B);
-        friend CubeFile cube_abs(const CubeFile &A);
+        int check(const CubeFile &A) const;
+        void scalar_add(const double &scalar);
+        void scalar_subtract(const double &scalar);
+        void scalar_multiply(const double &scalar);
+        void scalar_divide(const double &scalar);
+        void cube_add(const CubeFile &A);
+        void cube_subtract(const CubeFile &A);
+        void cube_multiply(const CubeFile &A);
+        void zero_cubeVals(void);
+        CubeFile absolute_value(void);
+        double integrate(void) const;
+        void print(void) const;     
+        //Operator Overloads
+        CubeFile& operator=(const CubeFile &A);
+        CubeFile& operator+=(const CubeFile &A);
+        CubeFile& operator+=(const double &scalar);
+        CubeFile& operator-=(const CubeFile &A);
+        CubeFile& operator-=(const double &scalar);
+        CubeFile& operator*=(const CubeFile &A);
+        CubeFile& operator*=(const double &scalar);
+        CubeFile& operator/=(const double &scalar);
+        CubeFile operator+(const CubeFile &A) const;
+        CubeFile operator+(const double &scalar) const;
+        CubeFile operator-(const CubeFile &A) const;
+        CubeFile operator-(const double &scalar) const;
+        CubeFile operator*(const CubeFile &A) const;
+        CubeFile operator*(const double &scalar) const;
+        CubeFile operator/(const double &scalar) const;
+        //Friend Functions
+        friend double g_return_overlap(const CubeFile &A, const CubeFile &B);
 };
 
-//Prototypes for friend function definitions
-double return_overlap(const CubeFile &A, const CubeFile &B);
-CubeFile scalar_add(const CubeFile &A, const double &scalar);
-CubeFile scalar_subtract(const CubeFile &A, const double &scalar);
-CubeFile scalar_multiply(const CubeFile &A, const double &scalar);
-CubeFile scalar_divide(const CubeFile &A, const double &scalar);
-CubeFile cube_add(const CubeFile &A, const CubeFile &B);
-CubeFile cube_subtract(const CubeFile &A, const CubeFile &B);
-CubeFile cube_multiply(const CubeFile &A, const CubeFile &B);
-CubeFile cube_abs(const CubeFile &A);
+//Prototypes for friend and global functions
+double g_return_overlap(const CubeFile &A, const CubeFile &B);
+double g_return_modulo_overlap(const CubeFile &A, const CubeFile &B);
+CubeFile g_scalar_add(const CubeFile &A, const double &scalar);
+CubeFile g_scalar_subtract(const CubeFile &A, const double &scalar);
+CubeFile g_scalar_multiply(const CubeFile &A, const double &scalar);
+CubeFile g_scalar_divide(const CubeFile &A, const double &scalar);
+CubeFile g_cube_add(const CubeFile &A, const CubeFile &B);
+CubeFile g_cube_subtract(const CubeFile &A, const CubeFile &B);
+CubeFile g_cube_multiply(const CubeFile &A, const CubeFile &B);
+CubeFile g_cube_absolute_value(const CubeFile &A);
+CubeFile operator+(const double &scalar, const CubeFile &A);
+CubeFile operator-(const double &scalar, const CubeFile &A);
+CubeFile operator*(const double &scalar, const CubeFile &A);
+CubeFile operator/(const double &scalar, const CubeFile &A);

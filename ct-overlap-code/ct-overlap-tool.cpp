@@ -15,6 +15,24 @@ void initialize_random_number_generator(void){
     srand(t.tv_nsec);
 }
 
+void unitary_transformation(const int n, const MatrixXd &U, const vector <CubeFile> &ab, vector <CubeFile> &abprime){
+    size_t N = n;
+    if(U.cols() != n || U.rows() != n) throw runtime_error("U is not the correct dimensions?");
+    else if(ab.size() != N) throw runtime_error("Input Vector is not the correct dimension?");
+    else if(abprime.size() != N) throw runtime_error("Output Vector is not the correct dimension?");
+    else{
+        //Set the abprime vector cubeVals to zero
+        for(size_t i=0; i<N; i++) abprime[i].zero_cubeVals();    
+
+        //Now generate the new cube files
+        for(size_t i=0; i<N; i++){
+            for(size_t j=0; j<N; j++){
+                abprime[i] += ab[i] * U(i, j);
+            }
+        }
+    }
+}
+
 int main(int argc, char *argv[]){
     try{
         if(argc < 3){
@@ -42,11 +60,32 @@ int main(int argc, char *argv[]){
         //Generate Unitary Transformation Matrix
         U = W.exp();
         //Print out W and U for user!
-        cout << "---> W <---\n" << W << "\n---> End W <---\n";
-        cout << "---> U <---\n" << U << "\n---> End U <---\n";
-        CubeFile A;
-        A = scalar_divide(cubeObjs[0], 0);
-        A.write("A.cube");
+        cout << "==========> W <==========\n" << W << "\n";
+        cout << "==========> U <==========\n" << U << "\n";
+        //Let's form the symmetric overlap matrix
+        MatrixXd Oab = MatrixXd::Zero(n, n);
+        for(int i=0; i<n; i++){
+            for(int j=0; j<=i; j++){
+                Oab(i, j) = g_return_modulo_overlap(cubeObjs[i], cubeObjs[j]);
+                Oab(j, i) = Oab(i, j);
+            }
+        }
+        cout << "==========> O_{ab} <==========\n" << Oab << "\n";
+        //Let's apply the unitary transformation matrix
+        vector <CubeFile> transformed_cubeObjs(n);
+        for(size_t i=0; i<cubeObjs.size(); i++){
+            transformed_cubeObjs[i] = cubeObjs[i];
+        }
+        unitary_transformation(n, U, cubeObjs, transformed_cubeObjs);
+        //Let's now form the symmetric overlap matrix for the transformed cubes
+        MatrixXd Oabprime = MatrixXd::Zero(n, n);
+        for(int i=0; i<n; i++){
+            for(int j=0; j<=i; j++){
+                Oabprime(i, j) = g_return_modulo_overlap(transformed_cubeObjs[i], transformed_cubeObjs[j]);
+                Oabprime(j, i) = Oabprime(i, j);
+            }
+        }
+        cout << "==========> O_{ab}' <==========\n" << Oabprime << "\n";
     }
     catch (exception &ex)
     {

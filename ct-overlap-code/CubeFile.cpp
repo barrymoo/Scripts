@@ -17,7 +17,7 @@ void set_ss(string &str, ifstream &f, stringstream &ss){
 } 
 
 //Default Contructor
-CubeFile::CubeFile(){
+CubeFile::CubeFile(void){
     //Do Nothing
 }
 
@@ -55,14 +55,14 @@ void CubeFile::read(const string &filename){
     }
     //Now we can read the grid points
     cubeVals.resize(numGridPts[0]*numGridPts[1]*numGridPts[2]);
-    for(int i=0; i<cubeVals.size(); i++){
+    for(size_t i=0; i<cubeVals.size(); i++){
         f >> cubeVals[i];
     }
     f.close();        
 }
 
 //Write to File
-void CubeFile::write(const string &filename){
+void CubeFile::write(const string &filename) const {
     ofstream f(filename);
     f << "Generated Cube File\n";
     f << "Generic Field Title\n";
@@ -85,14 +85,14 @@ void CubeFile::write(const string &filename){
     //f.width(13);
     //f.precision(5);
     int counter = 0;
-    for(int i=0; i<cubeVals.size(); i++){
+    for(size_t i=0; i<cubeVals.size(); i++){
         if(counter == 6){
             f << '\n';
             counter = 0;
         }
         f << cubeVals[i] << ' ';
         counter += 1;
-        if(i%numGridPts[2] == numGridPts[2]-1){
+        if( i%numGridPts[2] == numGridPts[2]-1){
             f << '\n';
             counter = 0;
         }
@@ -111,25 +111,68 @@ void CubeFile::copy(const CubeFile &A){
     cubeVals = A.cubeVals;
 }
 
-//Initialize function is the nearly the same as copy
-// except only resize the cubeVals for later processing
-void CubeFile::initialize(const CubeFile &A){
-    nAtoms = A.nAtoms;
-    startGridPt = A.startGridPt;
-    numGridPts = A.numGridPts;
-    gridVec = A.gridVec;
-    intStep = A.intStep;
-    geom = A.geom;
-    cubeVals.resize(A.cubeVals.size());
+//Check Function, return 0 if sizes are correct, 1 otherwise
+int CubeFile::check(const CubeFile &A) const {
+    return 0;
 }
 
-double CubeFile::integrate(){
+void CubeFile::scalar_add(const double &scalar){
+    for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] += scalar;
+}
+
+void CubeFile::scalar_subtract(const double &scalar){
+    double val=-scalar;
+    CubeFile::scalar_add(val);
+}
+
+void CubeFile::scalar_multiply(const double &scalar){
+    for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] *= scalar;
+}
+
+void CubeFile::scalar_divide(const double &scalar){
+    if(scalar == 0.0){
+        throw runtime_error("Attempting to use scalar_divide with zero");
+    } 
+    double val=1/scalar;
+    CubeFile::scalar_multiply(val);
+}
+
+void CubeFile::cube_add(const CubeFile &A){
+    for(size_t i=0; i<cubeVals.size(); i++){
+        cubeVals[i] += A.cubeVals[i];
+    } 
+}
+
+void CubeFile::cube_subtract(const CubeFile &A){
+    for(size_t i=0; i<cubeVals.size(); i++){
+        cubeVals[i] -= A.cubeVals[i];
+    } 
+}
+
+void CubeFile::cube_multiply(const CubeFile &A){
+    for(size_t i=0; i<cubeVals.size(); i++){
+        cubeVals[i] *= A.cubeVals[i];
+    } 
+}
+
+void CubeFile::zero_cubeVals(void){
+    for(size_t i=0; i<cubeVals.size(); i++){
+        cubeVals[i] = 0.0;
+    }
+}
+
+CubeFile CubeFile::absolute_value(void){
+    for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] = abs(cubeVals[i]);
+    return *this;
+}
+
+double CubeFile::integrate(void) const {
     double sum = 0.0;
     for(auto i: cubeVals) sum += i;
     return sum * intStep;
 }
 
-void CubeFile::print(){
+void CubeFile::print(void) const {
     cout << "\ncubeVals:\n";
     for(auto i: cubeVals){
         cout << i << ' ';
@@ -139,75 +182,149 @@ void CubeFile::print(){
 
 /*
  *
- * Friend Function Definitions
+ * Operator Overloads
  *
 */
-double return_overlap(const CubeFile &A, const CubeFile &B){
-    //Do Something
-    return 1.0;
+CubeFile& CubeFile::operator=(const CubeFile &A){
+    CubeFile::copy(A);
+    return *this;
 }
 
-CubeFile scalar_add(const CubeFile &A, const double &scalar){
+CubeFile& CubeFile::operator+=(const CubeFile &A){
+    CubeFile::cube_add(A);
+    return *this;
+}
+
+CubeFile& CubeFile::operator+=(const double &scalar){
+    CubeFile::scalar_add(scalar);
+    return *this;
+}
+
+CubeFile& CubeFile::operator-=(const CubeFile &A){
+    CubeFile::cube_subtract(A);
+    return *this;
+}
+
+CubeFile& CubeFile::operator-=(const double &scalar){
+    CubeFile::scalar_subtract(scalar);
+    return *this;
+}
+
+CubeFile& CubeFile::operator*=(const CubeFile &A){
+    CubeFile::cube_multiply(A);
+    return *this;
+}
+
+CubeFile& CubeFile::operator*=(const double &scalar){
+    CubeFile::scalar_multiply(scalar);
+    return *this;
+}
+
+CubeFile& CubeFile::operator/=(const double &scalar){
+    CubeFile::scalar_divide(scalar);
+    return *this;
+}
+
+CubeFile CubeFile::operator+(const CubeFile &A) const{
+    return g_cube_add(*this, A);
+}
+
+CubeFile CubeFile::operator+(const double &scalar) const{
+    return g_scalar_add(*this, scalar);
+}
+
+CubeFile CubeFile::operator-(const CubeFile &A) const{
+    return g_cube_subtract(*this, A);
+}
+
+CubeFile CubeFile::operator-(const double &scalar) const{
+    return g_scalar_subtract(*this, scalar);
+}
+
+CubeFile CubeFile::operator*(const CubeFile &A) const {
+    return g_cube_multiply(*this, A);
+}
+
+CubeFile CubeFile::operator*(const double &scalar) const{
+    return g_scalar_multiply(*this, scalar);
+}
+
+CubeFile CubeFile::operator/(const double &scalar) const{
+    return g_scalar_divide(*this, scalar);
+}
+
+/*
+ *
+ * Global Function Definitions
+ *
+*/
+double g_return_overlap(const CubeFile &A, const CubeFile &B){
+    return (A*B).integrate();
+}
+
+double g_return_modulo_overlap(const CubeFile &A, const CubeFile &B){
+    return (g_cube_absolute_value(A)*g_cube_absolute_value(B)).integrate();
+}
+
+CubeFile g_scalar_add(const CubeFile &A, const double &scalar){
     CubeFile B(A);
-    for(int i=0; i<B.cubeVals.size(); i++){
-        B.cubeVals[i] += scalar;
-    }
+    B += scalar;
     return B;
 }
 
-CubeFile scalar_subtract(const CubeFile &A, const double &scalar){
-    double val = -1.0 * scalar;
-    return scalar_add(A, val);
-}
-
-CubeFile scalar_multiply(const CubeFile &A, const double &scalar){
+CubeFile g_scalar_subtract(const CubeFile &A, const double &scalar){
     CubeFile B(A);
-    for(int i=0; i<B.cubeVals.size(); i++){
-        B.cubeVals[i] *= scalar;
-    }
+    B -= scalar;
     return B;
 }
 
-CubeFile scalar_divide(const CubeFile &A, const double &scalar){
-    //Need div by 0 exception
-    if(scalar == 0.0){
-        throw runtime_error("Attempting to use CubeFile::scalar_divide with Zero");
-    } 
-    double val = 1.0 / scalar;
-    return scalar_multiply(A, val);
+CubeFile g_scalar_multiply(const CubeFile &A, const double &scalar){
+    CubeFile B(A);
+    B *= scalar;
+    return B;    
 }
 
-CubeFile cube_add(const CubeFile &A, const CubeFile &B){
-    CubeFile C;
-    C.initialize(A);
-    for(int i=0; i<C.cubeVals.size(); i++){
-        C.cubeVals[i] = A.cubeVals[i] + B.cubeVals[i];
-    }
-    return C;
+CubeFile g_scalar_divide(const CubeFile &A, const double &scalar){
+    CubeFile B(A);
+    B /= scalar;
+    return B;
 }
 
-CubeFile cube_subtract(const CubeFile &A, const CubeFile &B){
-    CubeFile C;
-    C.initialize(A);
-    for(int i=0; i<C.cubeVals.size(); i++){
-        C.cubeVals[i] = A.cubeVals[i] - B.cubeVals[i];
-    }
-    return C;
-}
-
-CubeFile cube_multiply(const CubeFile &A, const CubeFile &B){
-    CubeFile C;
-    C.initialize(A);
-    for(int i=0; i<C.cubeVals.size(); i++){
-        C.cubeVals[i] = A.cubeVals[i] * B.cubeVals[i];
-    }
-    return C;
-}
-
-CubeFile cube_abs(const CubeFile &A){
+CubeFile g_cube_add(const CubeFile &A, const CubeFile &B){
     CubeFile C(A);
-    for(int i=0; i<C.cubeVals.size(); i++){
-        C.cubeVals[i] = abs(C.cubeVals[i]);
-    }
+    C += B;
     return C;
+}
+
+CubeFile g_cube_subtract(const CubeFile &A, const CubeFile &B){
+    CubeFile C(A);
+    C -= B;
+    return C;
+}
+
+CubeFile g_cube_multiply(const CubeFile &A, const CubeFile &B){
+    CubeFile C(A);
+    C *= B;
+    return C;
+}
+
+CubeFile g_cube_absolute_value(const CubeFile &A){
+    CubeFile B(A);
+    return B.absolute_value();
+}
+
+CubeFile operator+(const double &scalar, const CubeFile &A){
+    return A + scalar;
+}
+
+CubeFile operator-(const double &scalar, const CubeFile &A){
+    return -1.0 * A + scalar;
+}
+
+CubeFile operator*(const double &scalar, const CubeFile &A){
+    return A * scalar;
+}
+
+CubeFile operator/(const double &scalar, const CubeFile &A){
+    return A / scalar;
 }

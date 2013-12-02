@@ -1,7 +1,8 @@
 CXX=g++
-LIBRARY=/usr/include/eigen3
+FLAGS=-Wall -O2 -std=c++11
+LIBRARY=-I/usr/include/eigen3
 TARGET=ct-overlap-tool
 SOURCE=ct-overlap-tool.cpp CubeFile.cpp
 
 $(TARGET):$(SOURCE) 
-	$(CXX) -O2 -I$(LIBRARY) -std=c++11 $^ -o $@
+	$(CXX) $(FLAGS) $(LIBRARY) $^ -o $@
