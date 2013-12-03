@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <omp.h>
 
 using namespace std;
 

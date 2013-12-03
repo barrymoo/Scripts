@@ -270,7 +270,11 @@ double g_return_overlap(const CubeFile &A, const CubeFile &B){
 }
 
 double g_return_modulo_overlap(const CubeFile &A, const CubeFile &B){
-    return (g_cube_absolute_value(A)*g_cube_absolute_value(B)).integrate();
+    CubeFile C(A);
+    CubeFile D(B);
+    C.absolute_value();
+    D.absolute_value();
+    return (C*D).integrate();
 }
 
 CubeFile g_scalar_add(const CubeFile &A, const double &scalar){

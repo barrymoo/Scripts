@@ -4,6 +4,7 @@
 #include <random>
 #include <ctime>
 #include <unsupported/Eigen/MatrixFunctions>
+#include <omp.h>
 #include "CubeFile.h"
 
 using namespace Eigen;
@@ -63,6 +64,12 @@ int main(int argc, char *argv[]){
         //Print out W and U for user!
         cout << "==========> W <==========\n" << W << "\n";
         cout << "==========> U <==========\n" << U << "\n";
+
+        //Before we start doing cubefile manipulations
+        //let's benchmark openmp
+        omp_set_dynamic(0);
+        omp_set_num_threads(1);
+
         //Let's form the symmetric overlap matrix
         MatrixXd Oab = MatrixXd::Zero(n, n);
         for(int i=0; i<n; i++){
