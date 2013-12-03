@@ -3,6 +3,7 @@
 #include <array>
 #include <ios>
 #include <iostream>
+#include <stdexcept>
 #include <fstream>
 #include <sstream>
 #include <cmath>

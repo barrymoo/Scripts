@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdexcept>
 #include <random>
 #include <ctime>
 #include <unsupported/Eigen/MatrixFunctions>
