@@ -20,20 +20,36 @@ void initialize_random_number_generator(void){
 //Something wrong in this function
 void unitary_transformation(const int n, const MatrixXd &U, const vector <CubeFile> &ab, vector <CubeFile> &abprime){
     size_t N = n;
+    CubeFile A(ab[0]);
     if(U.cols() != n || U.rows() != n) throw runtime_error("U is not the correct dimensions?");
     else if(ab.size() != N) throw runtime_error("Input Vector is not the correct dimension?");
     else if(abprime.size() != N) throw runtime_error("Output Vector is not the correct dimension?");
     else{
         //Set the abprime vector cubeVals to zero
-        for(size_t i=0; i<N; i++) abprime[i].zero_cubeVals();    
+        for(size_t i=0; i<N; i++) abprime[i].zero_cubeVals();
+        A.zero_cubeVals();
 
         //Now generate the new cube files
         for(size_t i=0; i<N; i++){ //Goes over the N vector CubeFile Array
             for(size_t j=0; j<N; j++){ //Goes over the j index of U
-                abprime[i] += ab[j] * U(i, j);
+                A = ab[j] * U(i, j);
+                abprime[i] += A;
             }
         }
     }
+}
+
+void print_lower_triangle(const int n, const MatrixXd &A){
+    if(A.cols() != n || A.rows() != n) throw runtime_error("print_lower_triangle error: MatrixXd is not the correct dimensions?");
+    cout.setf(ios::fixed);
+    for(int i=0; i<n; i++){
+        for(int j=0; j<i; j++){
+            cout.width(9);
+            cout.precision(6);
+            cout << A(i, j) << " ";
+        }
+    }
+    cout << "\n";
 }
 
 int main(int argc, char *argv[]){
@@ -58,13 +74,19 @@ int main(int argc, char *argv[]){
         MatrixXd W = MatrixXd::Random(n, n);
         MatrixXd U = MatrixXd::Zero(n, n);
         //Make Random Matrix Antisymmetric
-        U = W.transpose();
-        W -= U;
+        for(int i=0; i<n; i++) W(i, i) = 0;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<i; j++){
+                W(j, i) = -W(i, j);
+            }
+        }
         //Generate Unitary Transformation Matrix
         U = W.exp();
         //Print out W and U for user!
-        cout << "==========> W <==========\n" << W << "\n";
-        cout << "==========> U <==========\n" << U << "\n";
+        cout << "W      : ";
+        print_lower_triangle(n, W);
+        cout << "U      : ";
+        print_lower_triangle(n, U);
 
         //Let's form the symmetric overlap matrix
         MatrixXd Oab = MatrixXd::Zero(n, n);
@@ -74,7 +96,9 @@ int main(int argc, char *argv[]){
                 Oab(j, i) = Oab(i, j);
             }
         }
-        cout << "==========> O_{ab} <==========\n" << Oab << "\n";
+        cout << "O_{ab} : ";
+        print_lower_triangle(n, Oab);
+
         //Let's apply the unitary transformation matrix
         vector <CubeFile> transformed_cubeObjs(n);
         for(size_t i=0; i<cubeObjs.size(); i++){
@@ -89,7 +113,8 @@ int main(int argc, char *argv[]){
                 Oabprime(j, i) = Oabprime(i, j);
             }
         }
-        cout << "==========> O_{ab}' <==========\n" << Oabprime << "\n";
+        cout << "O_{ab}': ";
+        print_lower_triangle(n, Oabprime);
     }
     catch (exception &ex)
     {
