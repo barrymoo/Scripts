@@ -15,6 +15,7 @@ void initialize_random_number_generator(void){
     srand(t.tv_nsec);
 }
 
+//Something wrong in this function
 void unitary_transformation(const int n, const MatrixXd &U, const vector <CubeFile> &ab, vector <CubeFile> &abprime){
     size_t N = n;
     if(U.cols() != n || U.rows() != n) throw runtime_error("U is not the correct dimensions?");
@@ -27,9 +28,8 @@ void unitary_transformation(const int n, const MatrixXd &U, const vector <CubeFi
         //Now generate the new cube files
         for(size_t i=0; i<N; i++){ //Goes over the N vector CubeFile Array
             for(size_t j=0; j<N; j++){ //Goes over the j index of U
-                abprime[i] += ab[i] * U(i, j);
+                abprime[i] += ab[j] * U(i, j);
             }
-            abprime[i] /= sqrt(N); 
         }
     }
 }

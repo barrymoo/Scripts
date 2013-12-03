@@ -117,6 +117,7 @@ int CubeFile::check(const CubeFile &A) const {
 }
 
 void CubeFile::scalar_add(const double &scalar){
+    #pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] += scalar;
 }
 
@@ -126,6 +127,7 @@ void CubeFile::scalar_subtract(const double &scalar){
 }
 
 void CubeFile::scalar_multiply(const double &scalar){
+    #pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] *= scalar;
 }
 
@@ -138,30 +140,35 @@ void CubeFile::scalar_divide(const double &scalar){
 }
 
 void CubeFile::cube_add(const CubeFile &A){
+    #pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++){
         cubeVals[i] += A.cubeVals[i];
     } 
 }
 
 void CubeFile::cube_subtract(const CubeFile &A){
+    #pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++){
         cubeVals[i] -= A.cubeVals[i];
     } 
 }
 
 void CubeFile::cube_multiply(const CubeFile &A){
+    #pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++){
         cubeVals[i] *= A.cubeVals[i];
     } 
 }
 
 void CubeFile::zero_cubeVals(void){
+    #pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++){
         cubeVals[i] = 0.0;
     }
 }
 
 CubeFile CubeFile::absolute_value(void){
+    #pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] = abs(cubeVals[i]);
     return *this;
 }
