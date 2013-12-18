@@ -93,10 +93,10 @@ int main(int argc, char *argv[]){
                                 U = W.exp();
 
                                 //Print out W and U
-                                cout << "W      : \n";
+                                cout << "W      : ";
                                 print_lower_triangle(n, W);
                                 //cout << W << '\n';
-                                cout << "U      : \n";
+                                cout << "U      : ";
                                 print_lower_triangle(n, U);
                                 //cout << U << '\n';
 
@@ -108,8 +108,8 @@ int main(int argc, char *argv[]){
                                         Oab(j, i) = Oab(i, j);
                                     }
                                 }
-                                cout << "O_{ab} : \n";
-                                print_lower_triangle(n, Oab);
+                                //cout << "O_{ab} : \n";
+                                //print_lower_triangle(n, Oab);
                                 //cout << Oab << '\n';
 
                                 //Let's apply the unitary transformation matrix
@@ -126,9 +126,21 @@ int main(int argc, char *argv[]){
                                         Oabprime(j, i) = Oabprime(i, j);
                                     }
                                 }
-                                cout << "O_{ab}': \n";
+                                cout << "O_{ab}': ";
                                 print_lower_triangle(n, Oabprime);
                                 //cout << Oabprime << '\n';
+                                //
+                                //====== MODDED VERSION PRINT =======
+                                cout.width(9);
+                                cout.precision(6);
+                                cout << "HL     : " << Oabprime(1,2) << " " << pow(U(1,1), 2) + pow(U(1,2), 2)
+                                                 << " " << pow(U(2,1), 2) + pow(U(2,2), 2) << '\n';
+
+                                cout << "H-1L   : " << Oabprime(0,2) << " " << pow(U(0,0), 2) + pow(U(0,2), 2)
+                                                 << " " << pow(U(2,0), 2) + pow(U(2,2), 2) << '\n';
+
+                                cout << "HL+1   : " << Oabprime(1,3) << " " << pow(U(1,1), 2) + pow(U(1,3), 2)
+                                                 << " " << pow(U(3,1), 2) + pow(U(3,3), 2) << '\n';
                             }
                         }
                     }
