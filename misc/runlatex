@@ -1,0 +1,23 @@
+#!/bin/bash
+
+check_latex_return_status () {
+    if [ $? != 0 ]; then
+        echo "Latex failed!"
+        exit -1;
+    fi
+}
+
+rm *bbl *aux *blg
+
+latexfile=`echo $1 | sed 's/\.tex//'`
+
+latex -halt-on-error $latexfile
+check_latex_return_status
+bibtex $latexfile
+bibtex $latexfile
+latex -halt-on-error $latexfile
+check_latex_return_status
+latex -halt-on-error $latexfile
+check_latex_return_status
+
+dvipdf $latexfile
