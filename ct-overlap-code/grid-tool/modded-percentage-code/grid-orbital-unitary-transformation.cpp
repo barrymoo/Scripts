@@ -65,8 +65,8 @@ int main(int argc, char *argv[]){
         MatrixXd U = MatrixXd::Zero(n, n);
 
         const double pi = boost::math::constants::pi<double>();
-        //const double step = 9*pi/180;
-        const double step = 90*pi/180;
+        const double step = 9*pi/180;
+        //const double step = 90*pi/180;
 
         //For Loop To Complete Grid for 2 by 2 case
         for(double i=0.0; i<=pi/2; i+=step){
@@ -141,6 +141,8 @@ int main(int argc, char *argv[]){
 
                                 cout << "HL+1   : " << Oabprime(1,3) << " " << pow(U(1,1), 2) + pow(U(1,3), 2)
                                                  << " " << pow(U(3,1), 2) + pow(U(3,3), 2) << '\n';
+                                cout << "H-1H   : " << Oabprime(0,1) << " " << pow(U(0,0), 2) + pow(U(0,1), 2)
+                                                 << " " << pow(U(1,0), 2) + pow(U(1,1), 2) << '\n';
                             }
                         }
                     }
