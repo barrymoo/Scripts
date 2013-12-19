@@ -1,5 +1,5 @@
 CXX=g++
-FLAGS=-Wall -O2 -std=c++11 -lrt -fopenmp
+FLAGS=-Wall -O3 -std=c++11 -lrt
 LIBRARY=-I/usr/include/eigen3 -I/usr/include
 TARGET=grid-orbital-unitary-transformation
 SOURCE=grid-orbital-unitary-transformation.cpp CubeFile.cpp
