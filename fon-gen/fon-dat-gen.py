@@ -4,6 +4,8 @@ import sys, os, glob
 
 files = sorted(glob.glob('*[0-5].out'))
 
+au2eV = 27.2114
+
 dftEnergy=[]
 for i in range(len(files)):
   inpFile=open(files[i],'r')
@@ -22,10 +24,10 @@ print ('#The cation-anion neutral difference is -> '+str(neutDiff))
 for i in reversed(range(1,6)):
   param=-float(i)/5
   deltaE=float(dftEnergy[(10-i)+1])-float(dftEnergy[0])
-  print (str(param)+' '+str(deltaE))
+  print (str(param)+' '+str(deltaE * au2eV))
 
 for i in range(0,6):
   param=float(i)/5
   deltaE=float(dftEnergy[i])-float(dftEnergy[0])
-  print (' '+str(param)+' '+str(deltaE))
+  print (' '+str(param)+' '+str(deltaE * au2eV))
   
