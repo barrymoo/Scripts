@@ -10,7 +10,6 @@
 using namespace Eigen;
 using namespace std;
 
-//Something wrong in this function
 void unitary_transformation(const int n, const MatrixXd &U, const vector <CubeFile> &ab, vector <CubeFile> &abprime){
     size_t N = n;
     CubeFile A(ab[0]);
@@ -60,29 +59,35 @@ int main(int argc, char *argv[]){
         vector <CubeFile> cubeObjs(n);
         for(int i=0; i < n; i++) cubeObjs[i].read(cubeFiles[i]);
 
-        //Now lets create W on a U on a grid
-        MatrixXd W = MatrixXd::Zero(n, n);
-        MatrixXd U = MatrixXd::Zero(n, n);
-
         const double pi = boost::math::constants::pi<double>();
         //const double step = 9*pi/180;
-        const double step = 90*pi/180;
+        const double step = 90 * pi / 180;
+        const int end = pi / (2 * step);
 
-        //For Loop To Complete Grid for 2 by 2 case
-        for(double i=0.0; i<=pi/2; i+=step){
-            for(double j=0.0; j<=pi/2; j+=step){
-                for(double k=0.0; k<=pi/2; k+=step){
-                    for(double l=0.0; l<=pi/2; l+=step){
-                        for(double m=0.0; m<=pi/2; m+=step){
-                            for(double o=0.0; o<=pi/2; o+=step){
-                                //First make W antisymmetric, then get unitary transformation matrix
-                                // from matrix exponentiation
-                                W(1, 0) = i;
-                                W(2, 0) = j;
-                                W(2, 1) = k;
-                                W(3, 0) = l;
-                                W(3, 1) = m;
-                                W(3, 2) = o;
+        //For Loop To Complete Grid for 4 by 4 case
+        #pragma omp parallel for collapse(6)
+        for(int i=0; i<=end; i++){
+            for(int j=0; j<=end; j++){
+                for(int k=0; k<=end; k++){
+                    for(int l=0; l<=end; l++){
+                        for(int m=0; m<=end; m++){
+                            for(int o=0; o<=end; o++){
+                                double ii = i * step;
+                                double jj = j * step;
+                                double kk = k * step;
+                                double ll = l * step;
+                                double mm = m * step;
+                                double oo = o * step;
+
+                                MatrixXd W = MatrixXd::Zero(n, n);
+                                MatrixXd U = MatrixXd::Zero(n, n);
+
+                                W(1, 0) = ii;
+                                W(2, 0) = jj;
+                                W(2, 1) = kk;
+                                W(3, 0) = ll;
+                                W(3, 1) = mm;
+                                W(3, 2) = oo;
 
                                 W(0, 1) = -W(1, 0);
                                 W(0, 2) = -W(2, 0);
@@ -92,14 +97,6 @@ int main(int argc, char *argv[]){
                                 W(2, 3) = -W(3, 2);
                                 U = W.exp();
 
-                                //Print out W and U
-                                cout << "W      : ";
-                                print_lower_triangle(n, W);
-                                //cout << W << '\n';
-                                cout << "U      : ";
-                                print_lower_triangle(n, U);
-                                //cout << U << '\n';
-
                                 //Let's form the symmetric overlap matrix
                                 MatrixXd Oab = MatrixXd::Zero(n, n);
                                 for(int i=0; i<n; i++){
@@ -108,9 +105,6 @@ int main(int argc, char *argv[]){
                                         Oab(j, i) = Oab(i, j);
                                     }
                                 }
-                                //cout << "O_{ab} : \n";
-                                //print_lower_triangle(n, Oab);
-                                //cout << Oab << '\n';
 
                                 //Let's apply the unitary transformation matrix
                                 vector <CubeFile> transformed_cubeObjs(n);
@@ -126,23 +120,30 @@ int main(int argc, char *argv[]){
                                         Oabprime(j, i) = Oabprime(i, j);
                                     }
                                 }
-                                cout << "O_{ab}': ";
-                                print_lower_triangle(n, Oabprime);
-                                //cout << Oabprime << '\n';
-                                //
                                 //====== MODDED VERSION PRINT =======
-                                cout.width(9);
-                                cout.precision(6);
-                                cout << "HL     : " << Oabprime(1,2) << " " << pow(U(1,1), 2) + pow(U(1,2), 2)
-                                                 << " " << pow(U(2,1), 2) + pow(U(2,2), 2) << '\n';
+                                #pragma omp critical
+                                {
+                                    cout.width(9);
+                                    cout.precision(6);
+                                    cout << "W      : ";
+                                    print_lower_triangle(n, W);
+                                    cout << "U      : ";
+                                    print_lower_triangle(n, U);
+                                    //cout << "O_{ab} : ";
+                                    //print_lower_triangle(n, Oab);
+                                    cout << "O_{ab}': ";
+                                    print_lower_triangle(n, Oabprime);
+                                    cout << "HL     : " << Oabprime(1,2) << " " << pow(U(1,1), 2) + pow(U(1,2), 2)
+                                                    << " " << pow(U(2,1), 2) + pow(U(2,2), 2) << '\n';
 
-                                cout << "H-1L   : " << Oabprime(0,2) << " " << pow(U(0,0), 2) + pow(U(0,2), 2)
-                                                 << " " << pow(U(2,0), 2) + pow(U(2,2), 2) << '\n';
+                                    cout << "H-1L   : " << Oabprime(0,2) << " " << pow(U(0,0), 2) + pow(U(0,2), 2)
+                                                    << " " << pow(U(2,0), 2) + pow(U(2,2), 2) << '\n';
 
-                                cout << "HL+1   : " << Oabprime(1,3) << " " << pow(U(1,1), 2) + pow(U(1,3), 2)
-                                                 << " " << pow(U(3,1), 2) + pow(U(3,3), 2) << '\n';
-                                cout << "H-1H   : " << Oabprime(0,1) << " " << pow(U(0,0), 2) + pow(U(0,1), 2)
-                                                 << " " << pow(U(1,0), 2) + pow(U(1,1), 2) << '\n';
+                                    cout << "HL+1   : " << Oabprime(1,3) << " " << pow(U(1,1), 2) + pow(U(1,3), 2)
+                                                    << " " << pow(U(3,1), 2) + pow(U(3,3), 2) << '\n';
+                                    cout << "H-1H   : " << Oabprime(0,1) << " " << pow(U(0,0), 2) + pow(U(0,1), 2)
+                                                    << " " << pow(U(1,0), 2) + pow(U(1,1), 2) << '\n';
+                                }
                             }
                         }
                     }
