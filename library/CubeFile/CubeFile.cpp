@@ -4,17 +4,9 @@
  * CubeFile Class written by Barry Moore
  * No Warranty Implied
  * Things to update:
- * 1) Stringstreams can become fstreams
 */
 
 using namespace std;
-
-//Misc. Functions
-void set_ss(string &str, ifstream &f, stringstream &ss){
-    ss.clear();
-    getline(f, str);
-    ss.str(str);
-} 
 
 //Default Contructor
 CubeFile::CubeFile(void){
@@ -34,24 +26,20 @@ CubeFile::CubeFile(const CubeFile &A){
 //Read from file
 void CubeFile::read(const string &filename){
     ifstream f(filename);
-    stringstream ss;
     string line;
     getline(f, line); //Title -- Unused
     getline(f, line); //Field Title -- Unused
-    set_ss(line, f, ss); //nAtoms followed by startGridPt vector
-    ss >> nAtoms >> startGridPt[0] >> startGridPt[1] >> startGridPt[2];
+    f >> nAtoms >> startGridPt[0] >> startGridPt[1] >> startGridPt[2];
     //for loop reads in 3 lines containing numGridPts and gridVec matrix
     for(int i=0; i<3; i++){
-        set_ss(line, f, ss);
-        ss >> numGridPts[i] >> gridVec[i][0] >> gridVec[i][1] >> gridVec[i][2];
+        f >> numGridPts[i] >> gridVec[i][0] >> gridVec[i][1] >> gridVec[i][2];
     } 
     intStep = gridVec[0][0] * gridVec[1][1] * gridVec[2][2];
     //Now we can read the geometry
     geom.resize(nAtoms);
     for(int i=0; i<nAtoms; i++){
-        set_ss(line, f, ss);
-        ss >> geom[i].atomicNum >> geom[i].atomicMass >> geom[i].xyzVec[0]
-           >> geom[i].xyzVec[1] >> geom[i].xyzVec[2];
+        f >> geom[i].atomicNum >> geom[i].atomicMass >> geom[i].xyzVec[0]
+          >> geom[i].xyzVec[1] >> geom[i].xyzVec[2];
     }
     //Now we can read the grid points
     cubeVals.resize(numGridPts[0]*numGridPts[1]*numGridPts[2]);
@@ -117,7 +105,6 @@ int CubeFile::check(const CubeFile &A) const {
 }
 
 void CubeFile::scalar_add(const double &scalar){
-    //#pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] += scalar;
 }
 
@@ -127,7 +114,6 @@ void CubeFile::scalar_subtract(const double &scalar){
 }
 
 void CubeFile::scalar_multiply(const double &scalar){
-    //#pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] *= scalar;
 }
 
@@ -140,35 +126,30 @@ void CubeFile::scalar_divide(const double &scalar){
 }
 
 void CubeFile::cube_add(const CubeFile &A){
-    //#pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++){
         cubeVals[i] += A.cubeVals[i];
     } 
 }
 
 void CubeFile::cube_subtract(const CubeFile &A){
-    //#pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++){
         cubeVals[i] -= A.cubeVals[i];
     } 
 }
 
 void CubeFile::cube_multiply(const CubeFile &A){
-    //#pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++){
         cubeVals[i] *= A.cubeVals[i];
     } 
 }
 
 void CubeFile::zero_cubeVals(void){
-    //#pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++){
         cubeVals[i] = 0.0;
     }
 }
 
 CubeFile CubeFile::absolute_value(void){
-    //#pragma omp parallel for
     for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] = abs(cubeVals[i]);
     return *this;
 }
@@ -274,11 +255,7 @@ double g_return_overlap(const CubeFile &A, const CubeFile &B){
 double g_return_modulo_overlap(const CubeFile &A, const CubeFile &B){
     CubeFile C(A);
     CubeFile D(B);
-    C.absolute_value();
-    D.absolute_value();
-    CubeFile E(C);
-    E *= D;
-    return E.integrate();
+    return (C.absolute_value() * D.absolute_value()).integrate();
 }
 
 CubeFile g_scalar_add(const CubeFile &A, const double &scalar){
