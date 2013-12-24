@@ -9,18 +9,18 @@ add this directory to your PYTHONPATH environment variable and you are ready to 
 python terminal.
 
 Let's look at some classic examples for orthonormal cube files i.e. the molecular orbitals
-created from a quantum chemical calculation. We must check the integrals &lt i | j &gt = 0 and &lt i | i &gt = 1.
+created from a quantum chemical calculation. We must check the integrals &lt;i|j&gt;=0 and &lt;i|i&gt;=1.
+Note these cube files have a small grid value and therefore the integration is not exact.
 Follow this code snippet in the python terminal:
-<code>
-import CubeFile
 
-c1 = CubeFile.CubeFile("1.cube")
+<code> import CubeFile
 
-c2 = CubeFile.CubeFile("2.cube")
+<code> c1 = CubeFile.CubeFile("1.cube")
 
-print((c1*c1).integrate(), "Equals 1?")
+<code> c2 = CubeFile.CubeFile("2.cube")
 
-print((c2*c2).integrate(), "Equals 1?")
+<code> print((c1*c1).integrate(), "Equals 1?")
 
-print((c1*c2).integrate(), "Equals 0?")
-<\code>
+<code> print((c2*c2).integrate(), "Equals 1?")
+
+<code> print((c1*c2).integrate(), "Equals 0?")
