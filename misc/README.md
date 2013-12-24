@@ -21,7 +21,7 @@ tensor-tools
 ==
 This directory contains some tools I have used to do passive axis transformations on xyz based geometries. First script
 is center-on-atom.py see --help option. The pas-rotate tool is designed to rotate an xyz based geometry by a 3 x 3 tensor.
-To run the tool <code> ./pas-rotate XYZGeom Tensor <\code>. Where XYZGeom is a xyz file and Tensor is a text file containing
+To run the tool <code> ./pas-rotate XYZGeom Tensor </code>. Where XYZGeom is a xyz file and Tensor is a text file containing
 a 3 x 3 symmetric tensor (see efg-tensor as example). Additionally, one can specify 'inverse' for Tensor instead of a file to
 invert the geometry (I use this for stereochemical inversions). 
 
