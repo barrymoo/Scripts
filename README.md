@@ -2,7 +2,9 @@ Scripts
 ===
 
 This repository contains many of the scripts I use for my research projects. I will shortly explain
-what is available here, and README files will be available for detailed usage instructions.
+what is available here, and README files will be available for detailed usage instructions. Everything
+here is maintained by myself (Barry Moore) and is distributed freely without any
+warranty.
 
 * library: This directory currently contains a cube file manipulation tool to be used with python, mainly.
 * misc: This directory contains some tools for SLURM, LaTeX, and some generic research tools I have built.
