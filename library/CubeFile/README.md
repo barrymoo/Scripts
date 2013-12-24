@@ -13,14 +13,9 @@ created from a quantum chemical calculation. We must check the integrals &lt;i|j
 Note these cube files have a small grid value and therefore the integration is not exact.
 Follow this code snippet in the python terminal:
 
-<code> import CubeFile
-
-<code> c1 = CubeFile.CubeFile("1.cube")
-
-<code> c2 = CubeFile.CubeFile("2.cube")
-
-<code> print((c1*c1).integrate(), "Equals 1?")
-
-<code> print((c2*c2).integrate(), "Equals 1?")
-
-<code> print((c1*c2).integrate(), "Equals 0?")
+    import CubeFile
+    c1 = CubeFile.CubeFile("1.cube")
+    c2 = CubeFile.CubeFile("2.cube")
+    print((c1*c1).integrate(), "Equals 1?")
+    print((c2*c2).integrate(), "Equals 1?")
+    print((c1*c2).integrate(), "Equals 0?")
