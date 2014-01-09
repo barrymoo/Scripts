@@ -52,10 +52,10 @@ parser = argparse.ArgumentParser(usage='./sgen.py infile [options]',
                                  prefix_chars='-')
 parser.add_argument('infile', help='QM Job File-Supports ' +
                     'NWChem, Gaussian, QChem, and ADF')
-parser.add_argument('-np', '--num-procs', metavar='N', type=int, nargs=1,
-                    default=[1], help='Number of processors')
 parser.add_argument('-nn', '--num-nodes', metavar='N', type=int, nargs=1,
-                    default=[1], help='Number of processors')
+                    default=[1], help='Number of Nodes')
+parser.add_argument('-np', '--num-procs', metavar='N', type=int, nargs=1,
+                    default=[1], help='Number of Processors')
 parser.add_argument('-t', '--time', metavar='N', type=int, nargs=1,
                     default=[0], help='Job Time(hours)')
 parser.add_argument('-a', '--add', metavar='F', type=str, nargs='*',
