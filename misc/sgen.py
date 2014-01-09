@@ -56,11 +56,13 @@ if fileExt == 'nw':
         ofile.write('#SBATCH --ntasks-per-node='+str(numProcs[0])+'\n')
     ofile.write('#SBATCH --nodes=1\n')
     if genComp is not True:
+        ofile.write('#SBATCH --cluster=chemistry\n')
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
     else:
         ofile.write('#SBATCH --account=jochena\n')
         ofile.write('#SBATCH --partition=general-compute\n')
+        ofile.write('#SBATCH --cluster=ub-hpc\n')
     ofile.write('#SBATCH --job-name=' + fileName + '\n')
     ofile.write('#SBATCH --output=' + fileName + '.out\n')
     ofile.write('#SBATCH --mail-type=END\n')
@@ -95,9 +97,11 @@ elif fileExt == 'adf':
     ofile.write('#SBATCH --nodes=1\n')
     ofile.write('#SBATCH --ntasks-per-node=' + str(numProcs[0]) + '\n')
     if genComp is not True:
+        ofile.write('#SBATCH --cluster=chemistry\n')
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
     else:
+        ofile.write('#SBATCH --cluster=ub-hpc\n')
         ofile.write('#SBATCH --account=jochena\n')
         ofile.write('#SBATCH --partition=general-compute\n')
     ofile.write('#SBATCH --job-name=' + fileName + '\n')
@@ -147,9 +151,11 @@ elif fileExt == 'com':
     ofile.write('#SBATCH --nodes=1\n')
     ofile.write('#SBATCH --ntasks-per-node='+str(numProcs[0])+'\n')
     if genComp is not True:
+        ofile.write('#SBATCH --cluster=chemistry\n')
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
     else:
+        ofile.write('#SBATCH --cluster=ub-hpc\n')
         ofile.write('#SBATCH --account=jochena\n')
         ofile.write('#SBATCH --partition=general-compute\n')
     ofile.write('#SBATCH --job-name=' + fileName + '\n')
@@ -177,9 +183,11 @@ elif fileExt == 'qc':
     ofile.write('#SBATCH --nodes=1\n')
     ofile.write('#SBATCH --ntasks-per-node=' + str(numProcs[0]) + '\n')
     if genComp is not True:
+        ofile.write('#SBATCH --cluster=chemistry\n')
         ofile.write('#SBATCH --partition=jochena\n')
         ofile.write('#SBATCH --account=pi-jochena\n')
     else:
+        ofile.write('#SBATCH --cluster=ub-hpc\n')
         ofile.write('#SBATCH --account=jochena\n')
         ofile.write('#SBATCH --partition=general-compute\n')
     ofile.write('#SBATCH --job-name=' + fileName + '\n')
