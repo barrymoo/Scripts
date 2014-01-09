@@ -58,12 +58,12 @@ parser.add_argument('-np', '--num-procs', metavar='N', type=int, nargs=1,
                     default=[1], help='Number of Processors')
 parser.add_argument('-t', '--time', metavar='N', type=int, nargs=1,
                     default=[0], help='Job Time(hours)')
-parser.add_argument('-a', '--add', metavar='F', type=str, nargs='*',
-                    default=[0], help='Additional Job Files')
 parser.add_argument('-g', '--general', action='store_true',
                     help='Submit to general compute nodes')
 parser.add_argument('-e', '--empty-script', action='store_true',
                     help='Write empty script and exit')
+parser.add_argument('-a', '--add', metavar='F', type=str, nargs='*',
+                    default=[0], help='Additional Job Files (Must be last option!)')
 args = parser.parse_args()
 
 #Set some variables
