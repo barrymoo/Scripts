@@ -4,6 +4,10 @@ from os import environ
 from os.path import splitext
 from sys import exit
 
+#To Do
+# 1) Add Tinker SLURM Generator
+# 2) Add Quantum Espresso SLURM Generator (Maybe Better as Separate CPMD Script?)
+
 
 def split_filename_ext(inpFile):
     fileName, fileExt = splitext(inpFile)
