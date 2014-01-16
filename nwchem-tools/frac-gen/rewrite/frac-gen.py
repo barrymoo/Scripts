@@ -34,7 +34,7 @@ if __name__ == '__main__':
         pline = []
         pline.append('set term postscript eps color solid enhanced "Helvetica" 20\n')
         var = [1, 2, 3]
-        #First print fitting headers
+        #Generate the fitting functions
         for i, fi in enumerate(files):
             func, ext = splitext(fi)
             pline.append('#' * 5 + ' Fitting: ' + func.upper() + ' ' + '#' * 5)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
             pline.append('f' + str(i) + 'ea(x) = (x<0) ? f' + str(i) + 'ear(x) : (1/0)\n')
             var = [x+3 for x in var]
         
-        #Print some gnuplot lines
+        #Generate some generic gnuplot options
         pline.append("set out '" + splitext(argv[-1])[0] + ".eps'")
         pline.append('set key top right')
         pline.append('set size ratio 1.0')
@@ -60,22 +60,27 @@ if __name__ == '__main__':
         pline.append('set xlabel "{/Symbol D}N"')
         pline.append('set ylabel "[E({/Symbol D}N)-E(0)] / eV"')
 
-        #Print the plot lines
+        #Gnuplot LT and PT dictionary
+        op = {0: ["000000", "4"],  1: ["0000FF", "6"],  2: ["DC143C", "8"], 
+              3: ["00C957", "10"], 4: ["800080", "12"], 5: ["FF00FF", "14"],
+              6: ["EE7600", "1"],  7: ["000080", "2"],  8: ["556B2F", "3"]}
+
+        #Generate the plot lines
         var = [6, 3]
-        mod = [0, 1]
         for i, fi in enumerate(files):
             func, ext = splitext(fi)
             line = "'" + fi + "' u 1:2 t sprintf('%s (%4.2f,%5.2f)','" + func.upper() + "',a" + str(var[0]) + ',a' + str(var[1]) + \
-                ') w p lt ' + str(mod[0]) + ' lw 2 pt ' + str(mod[1]) + ', f' + str(i) + 'ip(x) w l lt ' + str(mod[0]) + \
-                ' lw 2 notitle, f' + str(i) + 'ea(x) w l lt ' + str(mod[0]) + ' lw 2 notitle'
-            if i == 0:
+                ') w p lt rgb "#' + op[i][0] + '" lw 2 pt ' + op[i][1] + ', f' + str(i) + 'ip(x) w l lt rgb "#' + op[i][0] + \
+                '" lw 2 notitle, f' + str(i) + 'ea(x) w l lt rgb "#' + op[i][0] + '" lw 2 notitle'
+            if len(files) == 1:
+                pline.append('plot ' + line)
+            elif i == 0:
                 pline.append('plot ' + line + ', \\')
             elif i == len(files)-1:
                 pline.append(' ' * 5 + line)
             else:
                 pline.append(' ' * 5 + line + ', \\')
             var = [x+6 for x in var]
-            mod = [x+1 for x in mod]
 
         #Finally write the output
         with open(argv[-1], 'w') as f:
