@@ -61,7 +61,7 @@ if __name__ == '__main__':
         pline.append('set ylabel "[E({/Symbol D}N)-E(0)] / eV"')
 
         #Print the plot lines
-        var = [3, 6]
+        var = [6, 3]
         mod = [0, 1]
         for i, fi in enumerate(files):
             func, ext = splitext(fi)
