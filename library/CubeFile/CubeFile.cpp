@@ -160,6 +160,30 @@ double CubeFile::integrate(void) const {
     return sum * intStep;
 }
 
+double CubeFile::centroid(void) const {
+    double centroid = 0.0;
+    double xp = startGridPt[0];
+    double yp = startGridPt[1];
+    double zp = startGridPt[2];
+    int counter = 0;
+    for(size_t i=0; i<numGridPts[0]; i++){
+        for(size_t j=0; j<numGridPts[1]; j++){
+            for(size_t k=0; k<numGridPts[2]; k++){
+                //Do Stuff here!
+                zp += gridVec[2][2];
+                counter += 1;
+            }
+            zp = startGridPt[2];
+            yp += gridVec[1][1];
+        }
+        zp = startGridPt[2];
+        yp = startGridPt[1];
+        xp += gridVec[0][0];
+    }
+    cout << xp << endl;
+    return centroid;
+}
+
 void CubeFile::print(void) const {
     cout << "\ncubeVals:\n";
     for(auto i: cubeVals){

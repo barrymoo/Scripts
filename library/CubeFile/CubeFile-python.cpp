@@ -26,6 +26,7 @@ BOOST_PYTHON_MODULE(CubeFile)
         .def("zero_cubeVals", &CubeFile::zero_cubeVals)
         .def("absolute_value", &CubeFile::absolute_value)
         .def("integrate", &CubeFile::integrate)
+        .def("centroid", &CubeFile::centroid)
         .def("print", &CubeFile::print)
         //Operator Overload
         .def(self += CubeFile())

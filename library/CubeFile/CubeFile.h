@@ -50,6 +50,7 @@ class CubeFile{
         void zero_cubeVals(void);
         CubeFile absolute_value(void);
         double integrate(void) const;
+        double centroid(void) const;
         void print(void) const;     
         //Operator Overloads
         CubeFile& operator=(const CubeFile &A);
