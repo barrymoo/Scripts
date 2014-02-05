@@ -7,8 +7,11 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
+#include <Python.h>
+#include <boost/python.hpp>
 
 using namespace std;
+namespace bp = boost::python;
 
 //Necessary typedefs and structures
 typedef array <double, 3> Vector3d;
@@ -50,7 +53,7 @@ class CubeFile{
         void zero_cubeVals(void);
         CubeFile absolute_value(void);
         double integrate(void) const;
-        double centroid(void) const;
+        bp::list centroid(void) const;
         void print(void) const;     
         //Operator Overloads
         CubeFile& operator=(const CubeFile &A);

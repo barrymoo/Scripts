@@ -5,6 +5,7 @@
 using namespace std;
 using namespace boost::python;
 
+
 BOOST_PYTHON_MODULE(CubeFile)
 {
     class_<CubeFile>("CubeFile")
