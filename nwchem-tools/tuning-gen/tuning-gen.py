@@ -146,7 +146,7 @@ try:
             for i in range(6, 11):
                 for j in range(0, 11):
                     alpha = str(float(i)/10)
-                    beta = str(1.0 - float(alpha))
+                    beta = '{:.2f}'.format(1.0 - float(alpha))
                     gamma = str(float(j)/20)
                     nwFileList = []
                     nwFileList.append(jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.nw')
@@ -194,7 +194,7 @@ try:
             for i in range(0, 6):
                 for j in range(0, 11):
                     alpha = str(float(i)/10)
-                    beta = str(1.0 - float(alpha))
+                    beta = '{:.2f}'.format(1.0 - float(alpha))
                     gamma = str(float(j)/20)
                     nwFileList = []
                     nwFileList.append(jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.nw')

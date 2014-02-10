@@ -29,7 +29,7 @@ try:
         for i in range(0, 11):
             for j in range(0, 11):
                 alpha = str(float(i)/10)
-                beta = str(1.0 - float(alpha))
+                beta = '{:.2f}'.format(1.0 - float(alpha))
                 gamma = str(float(j)/20)
                 neutFileName = jobName + '-neutral-tuning-' + alpha + '-' + gamma + '.out'
                 anFileName = jobName + '-anion-tuning-' + alpha + '-' + gamma + '.out'
