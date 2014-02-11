@@ -102,6 +102,9 @@ if all(fileExt != x for x in ['.nw', '.qc', '.com', '.adf']):
           'the extension: nw, adf, com, qc')
     exit()
 
+print(fileExt)
+exit()
+
 #NWChem SLURM Generation
 if fileExt == 'nw':
     tagfile = os.environ['NWCHEM_TAG_FILE']
