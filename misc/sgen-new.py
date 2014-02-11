@@ -91,7 +91,7 @@ if emptyScript:
     print('Printing SLURM headers and exiting')
     fileName, fileExt = split_filename_ext(inpFile)
     ofile = open(fileName+'.slurm', 'w')
-    write_header(inpFile, numNodes, numNodes, numProcs, jobTime, genComp, ofile)    
+    write_header(inpFile, numNodes, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
     ofile.close()
     exit()
