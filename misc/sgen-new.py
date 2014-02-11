@@ -72,6 +72,7 @@ args = parser.parse_args()
 
 #Set some variables
 inpFile = args.infile
+fileName, fileExt = split_filename_ext(inpFile)
 numProcs = args.nprocs[0]
 numNodes = args.nnodes[0]
 jobTime = args.time[0]
@@ -105,7 +106,6 @@ if all(fileExt != x for x in ['.nw', '.qc', '.com', '.adf']):
 if fileExt == 'nw':
     tagfile = os.environ['NWCHEM_TAG_FILE']
     print('I found an NWChem input --> Processing')
-    fileName, fileExt = split_filename_ext(inpFile)
     ofile = open(fileName+'.slurm', 'w')
     write_header(inpFile, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
@@ -129,7 +129,6 @@ if fileExt == 'nw':
 elif fileExt == 'adf':
     tagfile = os.environ['ADF_TAG_FILE']
     print('I found an ADF input --> Processing')
-    fileName, fileExt = split_filename_ext(inpFile)
     ofile = open(fileName + '.slurm', 'w')
     write_header(inpFile, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
@@ -161,7 +160,6 @@ elif fileExt == 'adf':
 elif fileExt == 'com':
     tagfile = os.environ['G09_TAG_FILE']
     print('I found a Gaussian input --> Processing')
-    fileName, fileExt = split_filename_ext(inpFile)
     ofile = open(fileName+'.slurm', 'w')
     write_header(inpFile, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
@@ -177,7 +175,6 @@ elif fileExt == 'com':
 elif fileExt == 'qc':
     tagfile = os.environ['QCHEM_TAG_FILE']
     print('I found a QChem input --> Processing')
-    fileName, fileExt = split_filename_ext(inpFile)
     ofile = open(fileName+'.slurm', 'w')
     write_header(inpFile, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
