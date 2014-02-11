@@ -14,7 +14,7 @@ def split_filename_ext(inpFile):
     return fileName, fileExt
 
 
-def write_header(inpFile, numNodes, numProcs, jobTime, genComp, ofile):
+def write_header(inpFile, numNodes, numNodes, numProcs, jobTime, genComp, ofile):
     fileName, fileExt = split_filename_ext(inpFile)
     ofile.write('#!/bin/bash\n')
     if fileName == 'dplot':
@@ -91,7 +91,7 @@ if emptyScript:
     print('Printing SLURM headers and exiting')
     fileName, fileExt = split_filename_ext(inpFile)
     ofile = open(fileName+'.slurm', 'w')
-    write_header(inpFile, numProcs, jobTime, genComp, ofile)    
+    write_header(inpFile, numNodes, numNodes, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
     ofile.close()
     exit()
@@ -107,7 +107,7 @@ if fileExt == '.nw':
     tagfile = environ['NWCHEM_TAG_FILE']
     print('I found an NWChem input --> Processing')
     ofile = open(fileName+'.slurm', 'w')
-    write_header(inpFile, numProcs, jobTime, genComp, ofile)    
+    write_header(inpFile, numNodes, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
     ofile.write('cd $SLURMTMPDIR\n')
     ofile.write('source ' + tagfile + '\n')
@@ -131,7 +131,7 @@ elif fileExt == '.adf':
     tagfile = environ['ADF_TAG_FILE']
     print('I found an ADF input --> Processing')
     ofile = open(fileName + '.slurm', 'w')
-    write_header(inpFile, numProcs, jobTime, genComp, ofile)    
+    write_header(inpFile, numNodes, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
     ofile.write('export I_MPI_DEBUG=4\n')
     ofile.write('HOSTFILE=$SLURMTMPDIR/hosts.$SLURM_JOB_ID\n')
@@ -163,7 +163,7 @@ elif fileExt == '.com':
     tagfile = environ['G09_TAG_FILE']
     print('I found a Gaussian input --> Processing')
     ofile = open(fileName+'.slurm', 'w')
-    write_header(inpFile, numProcs, jobTime, genComp, ofile)    
+    write_header(inpFile, numNodes, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
     ofile.write('cd $SLURMTMPDIR\n')
     ofile.write('export LC_COLLATE=C\n')
@@ -179,7 +179,7 @@ elif fileExt == '.qc':
     tagfile = environ['QCHEM_TAG_FILE']
     print('I found a QChem input --> Processing')
     ofile = open(fileName+'.slurm', 'w')
-    write_header(inpFile, numProcs, jobTime, genComp, ofile)    
+    write_header(inpFile, numNodes, numProcs, jobTime, genComp, ofile)    
     set_variables_export_variables(ofile)
     ofile.write('cd $SLURMTMPDIR\n')
     ofile.write('. $MODULESHOME/init/sh\n')
