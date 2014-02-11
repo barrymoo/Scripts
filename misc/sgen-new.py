@@ -102,11 +102,8 @@ if all(fileExt != x for x in ['.nw', '.qc', '.com', '.adf']):
           'the extension: nw, adf, com, qc')
     exit()
 
-print(fileExt)
-exit()
-
 #NWChem SLURM Generation
-if fileExt == 'nw':
+if fileExt == '.nw':
     tagfile = os.environ['NWCHEM_TAG_FILE']
     print('I found an NWChem input --> Processing')
     ofile = open(fileName+'.slurm', 'w')
@@ -130,7 +127,7 @@ if fileExt == 'nw':
     ofile.write('echo "FINISHED AT " `date`\n')
     ofile.close()
 #ADF SLURM Generation    
-elif fileExt == 'adf':
+elif fileExt == '.adf':
     tagfile = os.environ['ADF_TAG_FILE']
     print('I found an ADF input --> Processing')
     ofile = open(fileName + '.slurm', 'w')
@@ -162,7 +159,7 @@ elif fileExt == 'adf':
     ofile.write('$ADFBIN/adf < ' + inpFile + '\n')
     ofile.write('mv TAPE21 $SLURM_SUBMIT_DIR/' + fileName + '.t21\n')
     ofile.close()
-elif fileExt == 'com':
+elif fileExt == '.com':
     tagfile = os.environ['G09_TAG_FILE']
     print('I found a Gaussian input --> Processing')
     ofile = open(fileName+'.slurm', 'w')
@@ -178,7 +175,7 @@ elif fileExt == 'com':
     ofile.write('g09 < ' + inpFile + '\n')
     ofile.write('cp *chk $SLURM_SUBMIT_DIR\n')
     ofile.close()
-elif fileExt == 'qc':
+elif fileExt == '.qc':
     tagfile = os.environ['QCHEM_TAG_FILE']
     print('I found a QChem input --> Processing')
     ofile = open(fileName+'.slurm', 'w')
