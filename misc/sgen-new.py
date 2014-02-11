@@ -125,6 +125,7 @@ if fileExt == 'nw':
         ofile.write('cp *cube $SLURM_SUBMIT_DIR\n')
     ofile.write('echo "All Done!"\n')
     ofile.write('echo "FINISHED AT " `date`\n')
+    ofile.close()
 #ADF SLURM Generation    
 elif fileExt == 'adf':
     tagfile = os.environ['ADF_TAG_FILE']
@@ -157,6 +158,7 @@ elif fileExt == 'adf':
                 ofile.write('sbcast $SLURM_SUBMIT_DIR/' + i + ' $SLURMTMPDIR/' + i + '\n')
     ofile.write('$ADFBIN/adf < ' + inpFile + '\n')
     ofile.write('mv TAPE21 $SLURM_SUBMIT_DIR/' + fileName + '.t21\n')
+    ofile.close()
 elif fileExt == 'com':
     tagfile = os.environ['G09_TAG_FILE']
     print('I found a Gaussian input --> Processing')
@@ -172,6 +174,7 @@ elif fileExt == 'com':
                 ' $SLURMTMPDIR/' + inpFile + '\n')
     ofile.write('g09 < ' + inpFile + '\n')
     ofile.write('cp *chk $SLURM_SUBMIT_DIR\n')
+    ofile.close()
 elif fileExt == 'qc':
     tagfile = os.environ['QCHEM_TAG_FILE']
     print('I found a QChem input --> Processing')
@@ -191,5 +194,4 @@ elif fileExt == 'qc':
     ofile.write('sbcast $SLURM_SUBMIT_DIR/' + inpFile +
                 ' $SLURMTMPDIR/' + inpFile + '\n')
     ofile.write('qchem -pbs -np $NPROCS ' + inpFile + '\n')
-
-ofile.close()
+    ofile.close()
