@@ -14,7 +14,7 @@ def split_filename_ext(inpFile):
     return fileName, fileExt
 
 
-def write_header(inpFile, numNodes, numNodes, numProcs, jobTime, genComp, ofile):
+def write_header(inpFile, numNodes, numProcs, jobTime, genComp, ofile):
     fileName, fileExt = split_filename_ext(inpFile)
     ofile.write('#!/bin/bash\n')
     if fileName == 'dplot':
