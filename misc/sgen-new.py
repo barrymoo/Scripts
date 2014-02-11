@@ -64,7 +64,7 @@ parser.add_argument('-t', '--time', metavar='N', type=int, nargs=1,
                     default=[0], help='Job Time(hours)')
 parser.add_argument('-g', '--general', action='store_true',
                     help='Submit to general compute nodes')
-parser.add_argument('-e', '--empty-script', action='store_true',
+parser.add_argument('-e', '--empty', action='store_true',
                     help='Write empty script and exit')
 parser.add_argument('-a', '--add', metavar='F', type=str, nargs='*',
                     default=[0], help='Additional Job Files (Must be last option!)')
@@ -76,7 +76,7 @@ numProcs = args.nprocs[0]
 numNodes = args.nnodes[0]
 jobTime = args.time[0]
 genComp = args.general
-emptyScript = args.empty-script
+emptyScript = args.empty
 addFileList = args.add
 
 #Check for general compute
