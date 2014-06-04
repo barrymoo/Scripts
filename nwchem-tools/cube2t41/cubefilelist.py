@@ -6,7 +6,7 @@ from sys import exit
 # This function is natural sorting algorithm
 def natural_sort(fileList):
     is_int = lambda text: int(text) if re.match('\d', text) else text.lower()
-    natural_key = lambda key: [is_int(x) for x in re.split('(\d+)', key)]
+    natural_key = lambda key: [is_int(x) for x in re.split('(\d+)', key)[-1]]
     return sorted(fileList, key = natural_key)
 
 # Attempt to generate a list of cubefiles
