@@ -1,19 +1,41 @@
 #!/usr/bin/env python
 from glob import glob
-from re import split
-from operator import itemgetter
+import re
 from sys import exit
 
-cubeFiles = glob("*cube")
-for i in range(len(cubeFiles)):
-    sp = cubeFiles[i].split('-')
-    prefix = '-'.join(sp[0:-1])
-    num = sp[-1].replace('.cube','')
-    cubeFiles[i] = [prefix, int(num)]
 
-cubeFiles = sorted(cubeFiles, key=itemgetter(1))
+# This function replaces all non-digit('\D') characters with '' 
+def find_digit(filename):
+    return int(re.sub('\D', '', filename))
 
-f = open('cubefiles', 'w')
-f.write("{0!s}\n".format(len(cubeFiles)))
+
+# Get a list of files ending in '.cube'
+cubeFiles = glob("*.cube")
+
+# If the list is not greater than 0 in length, we should exit
+if not len(cubeFiles) > 0:
+    exit('Error: There are no .cube files in this directory?')
+
+# First let's split the cube files into two lists:
+#  one that contains digits and one that does not
+numeric_sort = []
+alpha_sort = []
 for i in cubeFiles:
-    f.write("{0}-{1!s}.cube\n".format(i[0], i[1]))
+    if re.search('\d', i):
+        numeric_sort.append(i)
+    else:
+        alpha_sort.append(i)
+
+# alpha_sort can be sorted with 'sorted' function
+cubeFiles = sorted(alpha_sort)
+
+# numeric_sort needs to be done with key in 'sorted'
+cubeFiles += sorted(numeric_sort, key = find_digit)
+
+# Finally write the cubefiles file if the number of cubes
+#  is greater than 0
+if len(cubeFiles) > 0:
+    f = open('cubefiles', 'w')
+    f.write("{0!s}\n".format(len(cubeFiles)))
+    for i in cubeFiles:
+        f.write("{0!s}\n".format(i))
