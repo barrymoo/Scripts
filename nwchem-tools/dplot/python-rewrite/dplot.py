@@ -122,7 +122,7 @@ try:
                 x.append(float(sp[1]))
                 y.append(float(sp[2]))
                 z.append(float(sp[3]))
-            except ValueError:
+            except ValueError,IndexError:
                 pass
 
     # We now need to get min and max for each coordinate
