@@ -137,8 +137,8 @@ try:
   for i in range(0,6):
     newAFile=fileName+'-sa-'+str(i)+'.nw'
     newCFile=fileName+'-sc-'+str(i)+'.nw'
-    os.system('sgen.py '+newAFile+' -np '+str(numProcs)+' -t '+str(jobTime)+' -add '+movecsFile+' > /dev/null 2>&1')
-    os.system('sgen.py '+newCFile+' -np '+str(numProcs)+' -t '+str(jobTime)+' -add '+movecsFile+' > /dev/null 2>&1')
+    os.system('sgen.py -i '+newAFile+' -np '+str(numProcs)+' -t '+str(jobTime)+' -add '+movecsFile+' > /dev/null 2>&1')
+    os.system('sgen.py -i '+newCFile+' -np '+str(numProcs)+' -t '+str(jobTime)+' -add '+movecsFile+' > /dev/null 2>&1')
  
   if submitJobs:
     for i in range(0,6):
