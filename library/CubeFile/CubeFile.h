@@ -54,6 +54,7 @@ class CubeFile{
         CubeFile absolute_value(void);
         double integrate(void) const;
         bp::list centroid(void) const;
+        Vector3d molecular_center(void) const;
         void print(void) const;     
         //Operator Overloads
         CubeFile& operator=(const CubeFile &A);

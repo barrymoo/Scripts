@@ -204,9 +204,30 @@ bp::list CubeFile::centroid(void) const {
     }
     //Multiply centroid vector components by dV
     for(size_t i=0; i<3; i++) centroid[i] *= intStep;
+    //Subtract molecular center
+    Vector3d center = molecular_center();
+    for(size_t i=0; i<3; i++) centroid[i] -= center[i];
     //Return orbital centroid
     return wrap_Vector3d(centroid);
 }
+
+Vector3d CubeFile::molecular_center(void) const {
+    //Create and initialize center vector
+    Vector3d center;
+    for(size_t i=0; i<3; i++) center[i] = 0;
+    //Move through geometry and add coordinates
+    // to center vector
+    for(size_t i=0; i<geom.size(); i++){
+        for(size_t j=0; j<3; j++){
+            center[j] += geom[i].xyzVec[j];
+        } 
+    }
+    //Divide each vector by geom.size()
+    for(auto i: center) i /= geom.size();
+    //Return molecular center
+    return center;
+}
+
 
 void CubeFile::print(void) const {
     cout << "\ncubeVals:\n";
