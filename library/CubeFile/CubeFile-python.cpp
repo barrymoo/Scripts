@@ -28,7 +28,6 @@ BOOST_PYTHON_MODULE(CubeFile)
         .def("absolute_value", &CubeFile::absolute_value)
         .def("integrate", &CubeFile::integrate)
         .def("centroid", &CubeFile::centroid)
-        .def("molecular_center", &CubeFile::molecular_center)
         .def("print", &CubeFile::print)
         //Operator Overload
         .def(self += CubeFile())
