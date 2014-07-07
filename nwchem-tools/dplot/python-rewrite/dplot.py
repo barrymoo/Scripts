@@ -19,6 +19,7 @@ Options:
     -a, --alpha-beta                Plot both alpha and beta MOs (not valid with -c/--civecs)
     -c, --civecs <nwchem.civecs>    Print Transition Densities (TD) instead of MOs
     -g, --grid <value>              Change default grid parameter [default=50]
+    -e, --extent <value>            Change default extent of box size [default=2.0]
 """
 
 
@@ -43,9 +44,9 @@ def begin_dplot_block(f, args, x, y, z):
     f.write('dplot\n')
     f.write('vectors {0}\n'.format(args['--movecs']))
     f.write('limitxyz\n')
-    f.write('{0} {1} {2}\n'.format(x[0]-2, x[1]+2, args['--grid']))
-    f.write('{0} {1} {2}\n'.format(y[0]-2, y[1]+2, args['--grid']))
-    f.write('{0} {1} {2}\n'.format(z[0]-2, z[1]+2, args['--grid']))
+    f.write('{0} {1} {2}\n'.format(x[0]-args['--extent'], x[1]+args['--extent'], args['--grid']))
+    f.write('{0} {1} {2}\n'.format(y[0]-args['--extent'], y[1]+args['--extent'], args['--grid']))
+    f.write('{0} {1} {2}\n'.format(z[0]-args['--extent'], z[1]+args['--extent'], args['--grid']))
     f.write('gaussian\n')
 
 def end_dplot_block(f):
@@ -100,6 +101,16 @@ try:
     # Input Check 5: Set default grid value if necessary
     if not arguments['--grid']:
         arguments['--grid'] = '50'
+    
+    # Input Check 6: Set default extent value if necessary, also convert to float
+    #  if you cannot we need to exit
+    try:
+        if arguments['--extent']:
+            arguments['--extent'] = float(arguments['--extent'])
+        else:
+            arguments['--extent'] = 2.0
+    except ValueError:
+        exit("Error: The '-e/--extent' option accepts a float value only!") 
     
     # Input file exists, let's read it
     with open(arguments['--input'], 'r') as f:
