@@ -16,12 +16,8 @@ cubeFiles = glob("*.cube")
 if not len(cubeFiles) > 0:
     exit('Error: There are no .cube files in this directory?')
 
-print(cubeFiles)
-
 # Use our natural sort algorithm to sort the files
 cubeFiles = natural_sort(cubeFiles)
-
-print(cubeFiles)
 
 # Finally write the cubefiles file if the number of cubes
 #  is greater than 0
