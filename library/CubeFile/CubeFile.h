@@ -52,6 +52,7 @@ class CubeFile{
         void cube_multiply(const CubeFile &A);
         void zero_cubeVals(void);
         CubeFile absolute_value(void);
+        CubeFile square_root(void);
         double integrate(void) const;
         bp::list centroid(void) const;
         void print(void) const;     
@@ -86,7 +87,9 @@ CubeFile g_cube_add(const CubeFile &A, const CubeFile &B);
 CubeFile g_cube_subtract(const CubeFile &A, const CubeFile &B);
 CubeFile g_cube_multiply(const CubeFile &A, const CubeFile &B);
 CubeFile g_cube_absolute_value(const CubeFile &A);
+CubeFile g_cube_square_root(const CubeFile &A);
 CubeFile operator+(const double &scalar, const CubeFile &A);
 CubeFile operator-(const double &scalar, const CubeFile &A);
 CubeFile operator*(const double &scalar, const CubeFile &A);
 CubeFile operator/(const double &scalar, const CubeFile &A);
+CubeFile operator^(const double &scalar, const CubeFile &A);

@@ -162,6 +162,11 @@ CubeFile CubeFile::absolute_value(void){
     return *this;
 }
 
+CubeFile CubeFile::square_root(void){
+    for(size_t i=0; i<cubeVals.size(); i++) cubeVals[i] = sqrt(cubeVals[i]);
+    return *this;
+}
+
 double CubeFile::integrate(void) const {
     double sum = 0.0;
     for(auto i: cubeVals) sum += i;
@@ -351,6 +356,11 @@ CubeFile g_cube_multiply(const CubeFile &A, const CubeFile &B){
 CubeFile g_cube_absolute_value(const CubeFile &A){
     CubeFile B(A);
     return B.absolute_value();
+}
+
+CubeFile g_cube_square_root(const CubeFile &A){
+    CubeFile B(A);
+    return B.square_root();
 }
 
 CubeFile operator+(const double &scalar, const CubeFile &A){

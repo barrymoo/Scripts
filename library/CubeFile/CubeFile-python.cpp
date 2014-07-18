@@ -26,6 +26,7 @@ BOOST_PYTHON_MODULE(CubeFile)
         .def("cube_multiply", &CubeFile::cube_multiply)
         .def("zero_cubeVals", &CubeFile::zero_cubeVals)
         .def("absolute_value", &CubeFile::absolute_value)
+        .def("square_root", &CubeFile::square_root)
         .def("integrate", &CubeFile::integrate)
         .def("centroid", &CubeFile::centroid)
         .def("print", &CubeFile::print)
@@ -60,4 +61,5 @@ BOOST_PYTHON_MODULE(CubeFile)
     def("g_cube_subtract", g_cube_subtract);
     def("g_cube_multiply", g_cube_multiply);
     def("g_cube_absolute_value", g_cube_absolute_value);
+    def("g_cube_square_root", g_cube_square_root);
 }
