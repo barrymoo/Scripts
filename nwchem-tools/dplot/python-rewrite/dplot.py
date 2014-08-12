@@ -4,13 +4,15 @@ Usage:
     dplot.py [options]
         (-i <nwchem.nw> | --input <nwchem.nw>)
         (-m <nwchem.movecs> | --movecs <nwchem.movecs>)
-        (-l <mos> | --list <mos>)
+        (-l <mos> | --list <mos> | -d <string> | --density <string>)
 
 Positional Arguments:
     -i, --input <nwchem.nw>         A NWChem input file
     -m, --movecs <nwchem.movecs>    A NWChem movecs file generated from input
     -l, --list <mos>                List of MO's (movecs) or TD's (civecs) to plot
-                                    (no spaces allowed, example: 1-4,8-12,6,24)
+                                        (no spaces allowed, example: 1-4,8-12,6,24)
+    -d, --density <string>          Plot the density instead of mos
+                                        valid strings include: total, alpha, beta, spin
 
 Options:
     -h, --help                      Print this screen and exit
@@ -20,8 +22,6 @@ Options:
     -c, --civecs <nwchem.civecs>    Print Transition Densities (TD) instead of MOs
     -g, --grid <value>              Change default grid parameter [default=50]
     -e, --extent <value>            Change default extent of box size [default=2.0]
-    -d, --density <string>          Plot the density (ignores -l/--list)
-                                        valid strings include: total, alpha, beta, spin
 """
 
 
@@ -115,7 +115,7 @@ try:
         raise Exception("Extent Error: The '-e/--extent' option accepts a float value only!") 
 
     # Input Check 7: Is density switch set, if yes is it a valid string?
-    if arguments['--density'] not in ['total', 'alpha', 'beta', 'spin']:
+    if arguments['--density'] and arguments['--density'] not in ['total', 'alpha', 'beta', 'spin']:
         raise Exception('Density Error: {} is not a valid option, try -h/--help'.format(arguments['--density']))
     
     # Input file exists, let's read it
@@ -160,14 +160,20 @@ try:
         #   --> if '--density' is set, we will only process one block
         #   --> need some logic here for the '--alpha-beta' and '--beta' options
         base = splitext(arguments['--input'])[0]
-        mos = split_mo_list(arguments['--list'])
         if arguments['--density']:
             f.write('\n')
             begin_dplot_block(f, arguments, x, y, z)
-            f.write('spin {}\n'.format(arguments['--density']))
+            # I hate using the full spindens as an argument, therefore I deal
+            #   with the spin case separately (mainly the output format looks like
+            #   base-spindens-dens.cube i.e. dumb)
+            if arguments['--density'] == 'spin':
+                f.write('spin spindens\n')
+            else:    
+                f.write('spin {}\n'.format(arguments['--density']))
             f.write('output {}-{}-dens.cube\n'.format(base, arguments['--density']))
             end_dplot_block(f)
         else:
+            mos = split_mo_list(arguments['--list'])
             if arguments['--alpha-beta']:
                 for spin in ['alpha', 'beta']:
                     for i in mos:
@@ -204,8 +210,13 @@ try:
                     f.write('output {}-{}.cube\n'.format(base, i))
                     end_dplot_block(f)
 
-except (KeyboardInterrupt, SystemExit):
-    raise Exception('Interrupt Detected! exiting...')
+# Some common exceptions
+except KeyboardInterrupt:
+    exit('Interrupt Detected! exiting...')
+
+except SystemExit:
+    print('==> Input Error: Printing usage, or see documentation! <==')
+    print(__doc__)
 
 except Exception as e:
     print(e)
