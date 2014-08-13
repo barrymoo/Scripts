@@ -54,7 +54,7 @@ class CubeFile{
         CubeFile absolute_value(void);
         CubeFile square_root(void);
         double integrate(void) const;
-        double iso_integrate(const double &iso) const;
+        double iso_volume(const double &iso) const;
         bp::list centroid(void) const;
         void print(void) const;     
         //Operator Overloads

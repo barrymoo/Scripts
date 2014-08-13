@@ -173,14 +173,14 @@ double CubeFile::integrate(void) const {
     return sum * intStep;
 }
 
-double CubeFile::iso_integrate(const double &iso) const {
+double CubeFile::iso_volume(const double &iso) const {
     double sum = 0.0;
     for(size_t i=0; i<cubeVals.size(); i++){
         if(cubeVals[i] >= iso){
-            sum += cubeVals[i];
+            sum += intStep;
         }
     }
-    return sum * intStep;
+    return sum;
 }
 
 bp::list CubeFile::centroid(void) const {
