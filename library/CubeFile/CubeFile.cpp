@@ -174,6 +174,12 @@ double CubeFile::integrate(void) const {
 }
 
 double CubeFile::iso_volume(const double &iso) const {
+    // Debug function to check total volume
+    double vol = 1.0;
+    for(size_t i=0; i<3; i++) vol *= (startGridPt[i] + numGridPts[i] * gridVec[i][i]) - startGridPt[i];
+    cout << "Total Volume" << vol << '\n';
+
+    // This function integrates a cube inside an isosurface
     double sum = 0.0;
     for(size_t i=0; i<cubeVals.size(); i++){
         if(cubeVals[i] >= iso){
