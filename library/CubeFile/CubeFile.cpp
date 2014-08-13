@@ -173,6 +173,16 @@ double CubeFile::integrate(void) const {
     return sum * intStep;
 }
 
+double CubeFile::iso_integrate(const double &iso) const {
+    double sum = 0.0;
+    for(size_t i=0; i<cubeVals.size(); i++){
+        if(cubeVals[i] >= iso){
+            sum += cubeVals[i];
+        }
+    }
+    return sum * intStep;
+}
+
 bp::list CubeFile::centroid(void) const {
     //x, y, z starting points
     double xp = startGridPt[0];
