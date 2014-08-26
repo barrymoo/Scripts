@@ -38,10 +38,13 @@ def write_slurm_header(f, args, basename, group):
     f.write('#SBATCH --mail-type=END\n')
 
     # cluster logic
+    ext = splitext(arguments['--input'])[-1]
     if args['--general-compute']:
         f.write('#SBATCH --cluster=ub-hpc\n')
         f.write('#SBATCH --partition=general-compute\n')
         f.write('#SBATCH --account={0}\n'.format(group))
+        if ext == '.nw':
+            f.write('#SBATCH --exclude=CPU-6132HE\n')
     elif args['--debug']:
         f.write('#SBATCH --cluster=ub-hpc\n')
         f.write('#SBATCH --partition=debug\n')
