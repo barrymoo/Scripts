@@ -27,8 +27,10 @@ BOOST_PYTHON_MODULE(CubeFile)
         .def("zero_cubeVals", &CubeFile::zero_cubeVals)
         .def("absolute_value", &CubeFile::absolute_value)
         .def("square_root", &CubeFile::square_root)
-        .def("partition_plus", &CubeFile::partition_plus)
-        .def("partition_minus", &CubeFile::partition_minus)
+        // These functions are dangerous and we
+        //  comment them for user.
+        //.def("partition_plus", &CubeFile::partition_plus)
+        //.def("partition_minus", &CubeFile::partition_minus)
         .def("integrate", &CubeFile::integrate)
         .def("iso_volume", &CubeFile::iso_volume)
         .def("centroid", &CubeFile::centroid)
