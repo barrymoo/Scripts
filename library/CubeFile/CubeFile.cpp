@@ -169,14 +169,14 @@ CubeFile CubeFile::square_root(void){
 
 CubeFile CubeFile::partition_plus(void){
     for(size_t i=0; i<cubeVals.size(); i++){
-        if(cubeVals[i] <= 0.0) cubeVals[i] = 0;
+        if(cubeVals[i] <= 0.001) cubeVals[i] = 0;
     }
     return *this;
 }
 
 CubeFile CubeFile::partition_minus(void){
     for(size_t i=0; i<cubeVals.size(); i++){
-        if(cubeVals[i] >= 0.0) cubeVals[i] = 0;
+        if(cubeVals[i] >= 0.001) cubeVals[i] = 0;
     }
     return *this;
 }
