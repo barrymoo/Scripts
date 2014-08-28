@@ -91,6 +91,8 @@ CubeFile g_cube_subtract(const CubeFile &A, const CubeFile &B);
 CubeFile g_cube_multiply(const CubeFile &A, const CubeFile &B);
 CubeFile g_cube_absolute_value(const CubeFile &A);
 CubeFile g_cube_square_root(const CubeFile &A);
+CubeFile g_cube_partition_plus(const CubeFile &A);
+CubeFile g_cube_partition_minus(const CubeFile &A);
 CubeFile operator+(const double &scalar, const CubeFile &A);
 CubeFile operator-(const double &scalar, const CubeFile &A);
 CubeFile operator*(const double &scalar, const CubeFile &A);

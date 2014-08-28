@@ -168,29 +168,17 @@ CubeFile CubeFile::square_root(void){
 }
 
 CubeFile CubeFile::partition_plus(void){
-    CubeFile A(*this);
     for(size_t i=0; i<cubeVals.size(); i++){
-        if(cubeVals[i] > 0.0){
-            A.cubeVals[i] = cubeVals[i];
-        }
-        else{
-            A.cubeVals[i] = 0.0;
-        }
+        if(cubeVals[i] <= 0.0) cubeVals[i] = 0;
     }
-    return A;
+    return *this;
 }
 
 CubeFile CubeFile::partition_minus(void){
-    CubeFile A(*this);
     for(size_t i=0; i<cubeVals.size(); i++){
-        if(cubeVals[i] < 0.0){
-            A.cubeVals[i] = cubeVals[i];
-        }
-        else{
-            A.cubeVals[i] = 0.0;
-        }
+        if(cubeVals[i] >= 0.0) cubeVals[i] = 0;
     }
-    return A;
+    return *this;
 }
 
 double CubeFile::integrate(void) const {
@@ -403,6 +391,16 @@ CubeFile g_cube_absolute_value(const CubeFile &A){
 CubeFile g_cube_square_root(const CubeFile &A){
     CubeFile B(A);
     return B.square_root();
+}
+
+CubeFile g_cube_partition_plus(const CubeFile &A){
+    CubeFile B(A);
+    return B.partition_plus();
+}
+
+CubeFile g_cube_partition_minus(const CubeFile &A){
+    CubeFile B(A);
+    return B.partition_minus();
 }
 
 CubeFile operator+(const double &scalar, const CubeFile &A){

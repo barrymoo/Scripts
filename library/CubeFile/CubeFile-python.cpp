@@ -65,4 +65,6 @@ BOOST_PYTHON_MODULE(CubeFile)
     def("g_cube_multiply", g_cube_multiply);
     def("g_cube_absolute_value", g_cube_absolute_value);
     def("g_cube_square_root", g_cube_square_root);
+    def("g_cube_partition_plus", g_cube_partition_plus);
+    def("g_cube_partition_minus", g_cube_partition_minus);
 }
