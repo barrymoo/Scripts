@@ -53,6 +53,8 @@ class CubeFile{
         void zero_cubeVals(void);
         CubeFile absolute_value(void);
         CubeFile square_root(void);
+        CubeFile partition_plus(void);
+        CubeFile partition_minus(void);
         double integrate(void) const;
         double iso_volume(const double &iso) const;
         bp::list centroid(void) const;

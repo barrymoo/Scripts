@@ -167,6 +167,32 @@ CubeFile CubeFile::square_root(void){
     return *this;
 }
 
+CubeFile CubeFile::partition_plus(void){
+    CubeFile A(*this);
+    for(size_t i=0; i<cubeVals.size(); i++){
+        if(cubeVals[i] > 0.0){
+            A.cubeVals[i] = cubeVals[i];
+        }
+        else{
+            A.cubeVals[i] = 0.0;
+        }
+    }
+    return A;
+}
+
+CubeFile CubeFile::partition_minus(void){
+    CubeFile A(*this);
+    for(size_t i=0; i<cubeVals.size(); i++){
+        if(cubeVals[i] < 0.0){
+            A.cubeVals[i] = cubeVals[i];
+        }
+        else{
+            A.cubeVals[i] = 0.0;
+        }
+    }
+    return A;
+}
+
 double CubeFile::integrate(void) const {
     double sum = 0.0;
     for(auto i: cubeVals) sum += i;
