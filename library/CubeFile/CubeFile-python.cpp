@@ -25,15 +25,16 @@ BOOST_PYTHON_MODULE(CubeFile)
         .def("cube_subtract", &CubeFile::cube_subtract)
         .def("cube_multiply", &CubeFile::cube_multiply)
         .def("zero_cubeVals", &CubeFile::zero_cubeVals)
-        .def("absolute_value", &CubeFile::absolute_value)
-        .def("square_root", &CubeFile::square_root)
         // These functions are dangerous and we
-        //  comment them for user.
+        //  protect them for python user
         //.def("partition_plus", &CubeFile::partition_plus)
         //.def("partition_minus", &CubeFile::partition_minus)
+        //.def("absolute_value", &CubeFile::absolute_value)
+        //.def("square_root", &CubeFile::square_root)
         .def("integrate", &CubeFile::integrate)
         .def("iso_volume", &CubeFile::iso_volume)
         .def("centroid", &CubeFile::centroid)
+        .def("dens_centroid", &CubeFile::dens_centroid)
         .def("print", &CubeFile::print)
         //Operator Overload
         .def(self += CubeFile())

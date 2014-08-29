@@ -58,6 +58,7 @@ class CubeFile{
         double integrate(void) const;
         double iso_volume(const double &iso) const;
         bp::list centroid(void) const;
+        bp::list dens_centroid(void) const;
         void print(void) const;     
         //Operator Overloads
         CubeFile& operator=(const CubeFile &A);
