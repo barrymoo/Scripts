@@ -58,10 +58,8 @@ def write_slurm_generic_environment(f):
     '''
     This functions prints the generic slurm environment variables to the slurm file
     '''
+    f.write('export | grep SLURM\n')
     f.write('export SCRATCH_DIR=$SLURMTMPDIR\n')
-    f.write('export NNODES=`srun -l hostname | uniq | wc -l`\n')                              
-    f.write('export NPROCS=`srun -l hostname | wc -l`\n')                              
-    f.write('export | grep $SLURM\n')
     f.write('cd $SLURMTMPDIR\n')
     f.write('ulimit -s unlimited\n')
     f.write('export LC_COLLATE=C\n')
@@ -78,6 +76,7 @@ def write_adf_environment(f, tag):
     f.write('export SCM_MACHINEFILE=$HOSTFILE\n')
     f.write('source {0}\n'.format(tag))
     f.write('export SCM_TMPDIR=$SLURMTMPDIR\n')
+    write_slurm_generic_environment(f)
     f.write('$ADFBIN/adf < $SLURM_JOB_NAME.adf\n')
     f.write('cp $SLURMTMPDIR/TAPE21 $SLURM_SUBMIT_DIR/$SLURM_JOB_NAME.t21\n')
 
@@ -86,7 +85,9 @@ def write_nwchem_environment(f, tag):
     This function prints the nwchem specific options to the slurm file
     '''
     f.write('source {0}\n'.format(tag))
-    f.write('mpiexec.hydra -np $NPROCS $NWCHEM_EXEC $SLURM_JOB_NAME.nw\n')
+    write_slurm_generic_environment(f)
+    f.write('export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so\n')
+    f.write('srun -n $SLURM_NPROCS $NWCHEM_EXEC $SLURM_JOB_NAME.nw')
     f.write('cp $SLURM_JOB_NAME.movecs $SLURM_JOB_NAME.civecs* $SLURM_JOB_NAME.gen *.cube $SLURM_SUBMIT_DIR\n')
 
 def write_g09_environment(f, tag):
@@ -94,6 +95,7 @@ def write_g09_environment(f, tag):
     This function prints the gaussian specific options to the slurm file
     '''
     f.write('source {0}\n'.format(tag))
+    write_slurm_generic_environment(f)
     f.write('export LD_LIBRARY_PATH=/util/pgi/linux86/6.1/lib:$LD_LIBRARY_PATH\n')
     f.write('g09 < $SLURM_JOB_NAME.g09\n')
     f.write('cp $SLURM_JOB_NAME.chk $SLURM_SUBMIT_DIR\n')
@@ -104,6 +106,7 @@ def write_qchem_environment(f, tag):
     '''
     f.write('. $MODULESHOME/init/sh\n')
     f.write('module load qchem/{0}\n'.format(tag))
+    write_slurm_generic_environment(f)
     f.write('export QCLOCALSCR=$SLURMTMPDIR\n')
     f.write('export PBS_NODEFILE=nodelist.$$\n')
     f.write("srun --nodes=${SLURM_NNODES} bash -c 'hostname' > $PBS_NODEFILE\n")
@@ -188,7 +191,6 @@ try:
     jobname, ext = splitext(arguments['--input'])
     with open(slurmname, 'w') as f:
         write_slurm_header(f, arguments, jobname, groupname)
-        write_slurm_generic_environment(f)
         write_sbcast_directives(f, arguments)
         if ext == '.adf':
             write_adf_environment(f, tag)
