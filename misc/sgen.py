@@ -87,7 +87,7 @@ def write_nwchem_environment(f, tag):
     f.write('source {0}\n'.format(tag))
     write_slurm_generic_environment(f)
     f.write('export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so\n')
-    f.write('srun -n $SLURM_NPROCS $NWCHEM_EXEC $SLURM_JOB_NAME.nw')
+    f.write('srun -n $SLURM_NPROCS $NWCHEM_EXEC $SLURM_JOB_NAME.nw\n')
     f.write('cp $SLURM_JOB_NAME.movecs $SLURM_JOB_NAME.civecs* $SLURM_JOB_NAME.gen *.cube $SLURM_SUBMIT_DIR\n')
 
 def write_g09_environment(f, tag):
