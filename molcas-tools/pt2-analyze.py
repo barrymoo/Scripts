@@ -15,7 +15,7 @@ while c < len(lines):
             if 'CASPT2 PROPERTY SECTION' in lines[c]:
                 break
             if 'Denominators' in lines[c]:
-                sum = 0.0
+                esum = 0.0
                 c += 4
                 if '--' in lines[c]:
                     print('=== Root {} ===\nNo low energy denominators for this root.'.format(r))
@@ -25,7 +25,7 @@ while c < len(lines):
                     r += 1
                     while c < len(lines):
                         if '--' in lines[c]:
-                            print('% contribution from all low energy denom to 2nd order energy: {:>10.6f}'.format(100 * sum / e2))
+                            print('Total contrib to E2 (var): {:>10.6}, % contrib to E2: {:>10.6f}'.format(esum, 100 * esum / e2))
                             break
                         else:
                             sp = lines[c].split()
@@ -33,7 +33,7 @@ while c < len(lines):
                             j = int(sp[3].split('.')[-1])
                             denom = float(sp[-4])
                             contrib = float(sp[-1])
-                            sum += contrib
+                            esum += contrib
                             print('i: {:>3d}, j: {:>3d}, denom: {:>15.6e}, contrib: {:>15.6e}, e2 (var): {:>15.6e}, % of e2: {:>10.6f}'.format(i, j, denom, contrib, e2, 100 * contrib / e2))
                         c += 1
             if 'E2 (Variational)' in lines[c]:
