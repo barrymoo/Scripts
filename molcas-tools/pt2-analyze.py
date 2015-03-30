@@ -31,7 +31,7 @@ while c < len(lines):
                             sp = lines[c].split()
                             i = int(sp[2].split('.')[-1])
                             j = int(sp[3].split('.')[-1])
-                            denom = float(sp[4])
+                            denom = float(sp[-4])
                             contrib = float(sp[-1])
                             sum += contrib
                             print('i: {:>3d}, j: {:>3d}, denom: {:>15.6e}, contrib: {:>15.6e}, e2 (var): {:>15.6e}, % of e2: {:>10.6f}'.format(i, j, denom, contrib, e2, 100 * contrib / e2))
