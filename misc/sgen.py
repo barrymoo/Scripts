@@ -36,6 +36,7 @@ def write_slurm_header(f, args, basename, group):
     f.write('#SBATCH --job-name={0}\n'.format(basename))
     f.write('#SBATCH --output={0}.out\n'.format(basename))
     f.write('#SBATCH --mail-type=END\n')
+    f.write('#SBATCH --mem=3000\n')
 
     # cluster logic
     ext = splitext(arguments['--input'])[-1]
