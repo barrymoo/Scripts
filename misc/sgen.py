@@ -203,7 +203,7 @@ try:
             write_qchem_environment(f, tag)
 
     # Finally we can thank the user for using our program
-    print('The computer master race thanks you for using sgen.py {0}'.format(username))
+    #print('The computer master race thanks you for using sgen.py {0}'.format(username))
 
 except KeyboardInterrupt:
     exit('Interrupt detected! exiting...')
