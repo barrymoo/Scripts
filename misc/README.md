@@ -33,5 +33,5 @@ unitary transformation on 4 orthonormal cube files. I will add a citation for th
 an antisymmetric matrix `W` with each unqiue element spanning from 0 to &pi;. A matrix exponentiation is taken on `W` to generate `U`.
 The orthonormal set or orbitals {A, B, C, D} is unitarily transformed to a new set {A', B', C', D'} and overlap integrals
 of the type &lt; | i | | j | &gt; are printed. Additionally the percentages of i and j to i' and j' are printed. This code is run
-using the `CubeFile` class in the library directory. It is parallelized with OpenMP and to run the code in parallel you must export
-OMP_NUM_THREADS environment variable. 
+using the `CubeFile` class in the library directory. It is parallelized with OpenMP, and to run the code in parallel you must export
+`OMP_NUM_THREADS` environment variable. 
