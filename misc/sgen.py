@@ -11,6 +11,7 @@ Options:
     -v --version                    Print the version of sgen.py
     -g --general-compute            Submit job to general-compute on ub-hpc cluster
                                         default submit to jochena/ezurek on chemistry cluster  
+    -i --industry                   Submit job to scavenger on industry cluster
     -d --debug                      Submit job to debug on ub-hpc cluster
                                         default submit to jochena/ezurek on chemistry cluster  
     -p --num-procs <value>          Number of processors job will run on (default = 1)
@@ -42,17 +43,15 @@ def write_slurm_header(f, args, basename, group):
     if args['--general-compute']:
         f.write('#SBATCH --cluster=ub-hpc\n')
         f.write('#SBATCH --partition=general-compute\n')
-        f.write('#SBATCH --account={0}\n'.format(group))
-        if ext == '.nw':
-            f.write('#SBATCH --exclude=k07n[23-30]\n')
     elif args['--debug']:
         f.write('#SBATCH --cluster=ub-hpc\n')
         f.write('#SBATCH --partition=debug\n')
-        f.write('#SBATCH --account={0}\n'.format(group))
+    elif args['--industry']:
+        f.write('#SBATCH --cluster=industry\n')
+        f.write('#SBATCH --partition=scavenger\n')
     else:
         f.write('#SBATCH --cluster=chemistry\n')
         f.write('#SBATCH --partition={0}\n'.format(group))
-        f.write('#SBATCH --account=pi-{0}\n'.format(group))
 
 def write_slurm_generic_environment(f):
     '''
@@ -159,10 +158,14 @@ try:
     # Input check 2: cluster choice logic, can't use '-g' and '-d' keywords together
     #   if not '--time' set default time
     #   with '--debug' option one cannot specify '--time' > 1
-    if arguments['--general-compute'] and arguments['--debug']:
-        exit('Input Error: One can submit to either the general compute (-g/--general-compute)' +
-                ' or the debug (-d/--debug) queues, not both!')
+    if (arguments['--general-compute'] and arguments['--debug']) or
+       (arguments['--general-compute'] and arguments['--industry']) or
+       (arguments['--debug'] and arguments['--industry']):
+        exit('Input Error: One can submit to either the general compute (-g/--general-compute),' +
+                ' debug (-d/--debug), or industry (-i, --industry) queues!')
     elif arguments['--general-compute'] and not arguments['--time']:
+        arguments['--time'] = '72'
+    elif arguments['--industry'] and not arguments['--time']:
         arguments['--time'] = '72'
     elif arguments['--debug'] and arguments['--time']:
         print('--> Resetting time to 1 hour due to restrictions on debug queue <--')
