@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ''' sgen.py -- A slurm script generator
 Usage:
-    sgen.py (-i <file> | --input <file>) [-hvgd] [-p <value>] [-n <value>] [-t <value>] [-a <file>...]
+    sgen.py (-i <file> | --input <file>) [-hvgdy] [-p <value>] [-n <value>] [-t <value>] [-a <file>...]
 
 Positional Arguments:
     -i, --input <file>              QM input file, supports ADF, NWChem, Gaussian, QChem
@@ -11,7 +11,7 @@ Options:
     -v --version                    Print the version of sgen.py
     -g --general-compute            Submit job to general-compute on ub-hpc cluster
                                         default submit to jochena/ezurek on chemistry cluster  
-    -i --industry                   Submit job to scavenger on industry cluster
+    -y --industry                   Submit job to scavenger on industry cluster
     -d --debug                      Submit job to debug on ub-hpc cluster
                                         default submit to jochena/ezurek on chemistry cluster  
     -p --num-procs <value>          Number of processors job will run on (default = 1)
@@ -158,8 +158,8 @@ try:
     # Input check 2: cluster choice logic, can't use '-g' and '-d' keywords together
     #   if not '--time' set default time
     #   with '--debug' option one cannot specify '--time' > 1
-    if (arguments['--general-compute'] and arguments['--debug']) or
-       (arguments['--general-compute'] and arguments['--industry']) or
+    if (arguments['--general-compute'] and arguments['--debug']) or \
+       (arguments['--general-compute'] and arguments['--industry']) or \
        (arguments['--debug'] and arguments['--industry']):
         exit('Input Error: One can submit to either the general compute (-g/--general-compute),' +
                 ' debug (-d/--debug), or industry (-i, --industry) queues!')
