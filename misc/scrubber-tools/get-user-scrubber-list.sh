@@ -7,7 +7,8 @@ for i in ${users[*]}; do
     array=($(grep $i *.out | cut -d: -f1 | sort -u))
     echo "=========================="
     echo $i
-    echo ${array[*]/.out/}
+    new=${array[*]/.out/}
+    echo ${new[*]/info-/}
 done
 
 if [ ${#users[*]} -gt 0 ]; then
