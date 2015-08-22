@@ -104,12 +104,12 @@ def write_qchem_environment(f, tag):
     This function prints the qchem specific options to the slurm file
     '''
     f.write('. $MODULESHOME/init/sh\n')
-    f.write('module load qchem/{0}\n'.format(tag))
+    f.write('module load {0}\n'.format(tag))
     write_slurm_generic_environment(f)
     f.write('export QCLOCALSCR=$SLURMTMPDIR\n')
     f.write('export PBS_NODEFILE=nodelist.$$\n')
     f.write("srun --nodes=${SLURM_NNODES} bash -c 'hostname' > $PBS_NODEFILE\n")
-    f.write('qchem -pbs -np $NPROCS $SLURM_JOB_NAME.qc\n')
+    f.write('qchem -pbs -np $SLURM_NTASKS_PER_NODE $SLURM_JOB_NAME.qc\n')
 
 def write_sbcast_directives(f, args):
     '''
