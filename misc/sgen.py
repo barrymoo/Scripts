@@ -22,7 +22,7 @@ Options:
                                             debug = 1
                                             chemistry = 2000
     -a --add <file>...              Additional to copy to $SLURMTMPDIR
-    -m --memory <value>             Specify the memory for your job (in GB, defaults are complicated)
+    -m --memory <value>             Specify the memory for your job (in MB, defaults are complicated)
 '''
 
 
@@ -38,6 +38,7 @@ def write_slurm_header(f, args, basename, group):
     f.write('#SBATCH --job-name={0}\n'.format(basename))
     f.write('#SBATCH --output={0}.out\n'.format(basename))
     f.write('#SBATCH --mail-type=END\n')
+    f.write('#SBATCH --mem={}\n'.format(arguments['--memory']))
 
     # cluster logic
     ext = splitext(arguments['--input'])[-1]
@@ -219,8 +220,7 @@ try:
             # Set Memory Defaults                
             arguments['--memory'] = 64000 * (num_procs / 16)
     else
-        arguments['--memory'] = '{}000'.format(arguments['--memory'])
-        print("Input Warning: Set memory to {}! SLURM expects this number in MB".format(arguments['--memory']))
+        print("Warning: Set memory to {} MB! SLURM expects this number in MB".format(arguments['--memory']))
 
     # We need to get the username from environ['USER'] and group (i.e. jochena/ezurek) from first entry in groups command
     #   groupname is "tricky":
