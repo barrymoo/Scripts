@@ -22,6 +22,7 @@ Options:
                                             debug = 1
                                             chemistry = 2000
     -a --add <file>...              Additional to copy to $SLURMTMPDIR
+    -m --memory <value>             Specify the memory for your job (in GB, defaults are complicated)
 '''
 
 
@@ -181,6 +182,46 @@ try:
     if not arguments['--num-procs']:
         arguments['--num-procs'] = 1
 
+    # Input Check 4: Check Processor Numbers and Set Complicated Memory Defaults
+    if not arguments['--memory']:
+        num_procs = int(arguments['--num-procs'])
+        if arguments['--chemistry']:
+            # Check number of processors
+            if num_procs > 16:
+                exit('Input Error: Cannot ask for more that 16 cores on Chemistry Cluster')
+
+            # Set Memory Default
+            if num_procs <= 8:
+                arguments['--memory'] = 23000 * (num_procs / 8)            
+            elif num_procs <= 16:
+                arguments['--memory'] = 125000 * (num_procs / 16)
+        elif arguments['--general-compute'] or arguments['--debug']:
+            # Check number of processors
+            if arguments['--debug'] and num_procs > 12:
+                exit('Input Error: Cannot ask for more than 12 cores on debug cluster')
+            elif num_procs > 32:
+                exit('Input Error: Cannot ask for more than 32 cores on general compute cluster')
+
+            # Set Memory Defaults                
+            if num_procs <= 8:
+                arguments['--memory'] = 23000 * (num_procs / 8)
+            elif num_procs <= 12:
+                arguments['--memory'] = 48000 * (num_procs / 12)
+            elif num_procs <= 16:
+                arguments['--memory'] = 128000 * (num_procs / 16)
+            elif num_procs <= 32:
+                arguments['--memory'] = 256000 * (num_procs / 32)
+        elif arguments['--industry']:
+            # Check number of processors
+            if num_procs > 16:
+                exit('Input Error: Cannot ask for more that 16 cores on industry cluster')
+            
+            # Set Memory Defaults                
+            arguments['--memory'] = 64000 * (num_procs / 16)
+    else
+        arguments['--memory'] = '{}000'.format(arguments['--memory'])
+        print("Input Warning: Set memory to {}! SLURM expects this number in MB".format(arguments['--memory']))
+
     # We need to get the username from environ['USER'] and group (i.e. jochena/ezurek) from first entry in groups command
     #   groupname is "tricky":
     #       1) use check_output from subprocess to generate a byte array
@@ -189,7 +230,7 @@ try:
     username = environ['USER']
     groupname = check_output('groups', shell=True).decode('utf-8').split()[0]
     
-    # We are not in a position to generate the '.slurm' file
+    # We are now in a position to generate the '.slurm' file
     slurmname = '{0}.slurm'.format(splitext(arguments['--input'])[0])
     jobname, ext = splitext(arguments['--input'])
     with open(slurmname, 'w') as f:
