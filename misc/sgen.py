@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 ''' sgen.py -- A slurm script generator
 Usage:
-    sgen.py (-i <file> | --input <file>) [-hvgdy] [-p <value>] [-n <value>] [-t <value>] [-a <file>...]
+    sgen.py (-i <file> | --input <file>) [-hvgdy] [-p <value>] [-n <value>] [-t <value>] [-m <value>] [-a <file>...]
 
 Positional Arguments:
     -i, --input <file>              QM input file, supports ADF, NWChem, Gaussian, QChem
