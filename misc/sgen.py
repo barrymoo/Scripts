@@ -197,11 +197,11 @@ try:
             # Set Memory Defaults
             if num_procs <= 8:
                 arguments['--memory'] = int(23000 * (num_procs / 8))
-                        elif num_procs <= 12:
+            elif num_procs <= 12:
                 arguments['--memory'] = int(48000 * (num_procs / 12))
-                    elif num_procs <= 16:
+            elif num_procs <= 16:
                 arguments['--memory'] = int(128000 * (num_procs / 16))
-                    elif num_procs <= 32:
+            elif num_procs <= 32:
                 arguments['--memory'] = int(256000 * (num_procs / 32))
         elif arguments['--industry']:
             # Check number of processors
