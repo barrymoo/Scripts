@@ -186,17 +186,8 @@ try:
     # Input Check 4: Check Processor Numbers and Set Complicated Memory Defaults
     if not arguments['--memory']:
         num_procs = int(arguments['--num-procs'])
-        if arguments['--chemistry']:
-            # Check number of processors
-            if num_procs > 16:
-                exit('Input Error: Cannot ask for more that 16 cores on Chemistry Cluster')
 
-            # Set Memory Default
-            if num_procs <= 8:
-                arguments['--memory'] = 23000 * (num_procs / 8)            
-            elif num_procs <= 16:
-                arguments['--memory'] = 125000 * (num_procs / 16)
-        elif arguments['--general-compute'] or arguments['--debug']:
+        if arguments['--general-compute'] or arguments['--debug']:
             # Check number of processors
             if arguments['--debug'] and num_procs > 12:
                 exit('Input Error: Cannot ask for more than 12 cores on debug cluster')
@@ -219,6 +210,16 @@ try:
             
             # Set Memory Defaults                
             arguments['--memory'] = 64000 * (num_procs / 16)
+        else:
+            # Check number of processors
+            if num_procs > 16:
+                exit('Input Error: Cannot ask for more that 16 cores on Chemistry Cluster')
+
+            # Set Memory Default
+            if num_procs <= 8:
+                arguments['--memory'] = 23000 * (num_procs / 8)            
+            elif num_procs <= 16:
+                arguments['--memory'] = 125000 * (num_procs / 16)
     else:
         print("Warning: Set memory to {} MB! SLURM expects this number in MB".format(arguments['--memory']))
 
