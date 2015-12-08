@@ -219,7 +219,7 @@ try:
             
             # Set Memory Defaults                
             arguments['--memory'] = 64000 * (num_procs / 16)
-    else
+    else:
         print("Warning: Set memory to {} MB! SLURM expects this number in MB".format(arguments['--memory']))
 
     # We need to get the username from environ['USER'] and group (i.e. jochena/ezurek) from first entry in groups command
