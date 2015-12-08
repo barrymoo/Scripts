@@ -10,10 +10,10 @@ Options:
     -h --help                       Print this screen and exit
     -v --version                    Print the version of sgen.py
     -g --general-compute            Submit job to general-compute on ub-hpc cluster
-                                        default submit to jochena/ezurek on chemistry cluster  
+                                        default submit to jochena/ezurek on chemistry cluster
     -y --industry                   Submit job to scavenger on industry cluster
     -d --debug                      Submit job to debug on ub-hpc cluster
-                                        default submit to jochena/ezurek on chemistry cluster  
+                                        default submit to jochena/ezurek on chemistry cluster
     -p --num-procs <value>          Number of processors job will run on (default = 1)
     -n --num-nodes <value>          Number of processors job will run on (default = 1)
     -t --time <value>               How long would you like the job to run (in hours)
@@ -129,10 +129,10 @@ try:
     from os.path import isfile, splitext
     from subprocess import check_output
     from sys import exit
-    
+
     # Using docstring above, parse the arguments with docopt
     arguments = docopt(__doc__, version='sgen.py version 0.0.1')
-    
+
     # Input check 1: does the input file exist and have a compatible file extension ['.adf', '.nw', '.g09', '.qc']
     #   No reason to continue otherwise
     while True:
@@ -153,8 +153,8 @@ try:
                     tag = environ['QCHEM_TAG_FILE']
             except KeyError:
                 exit('Environment Variable Error: This code expects environment variables for tag files! See README')
-            
-            # break from 'Input Check 1'               
+
+            # break from 'Input Check 1'
             break
 
     # Input check 2: cluster choice logic, can't use '-g' and '-d' keywords together
@@ -194,22 +194,22 @@ try:
             elif num_procs > 32:
                 exit('Input Error: Cannot ask for more than 32 cores on general compute cluster')
 
-            # Set Memory Defaults                
+            # Set Memory Defaults
             if num_procs <= 8:
-                arguments['--memory'] = 23000 * (num_procs / 8)
-            elif num_procs <= 12:
-                arguments['--memory'] = 48000 * (num_procs / 12)
-            elif num_procs <= 16:
-                arguments['--memory'] = 128000 * (num_procs / 16)
-            elif num_procs <= 32:
-                arguments['--memory'] = 256000 * (num_procs / 32)
+                arguments['--memory'] = int(23000 * (num_procs / 8))
+                        elif num_procs <= 12:
+                arguments['--memory'] = int(48000 * (num_procs / 12))
+                    elif num_procs <= 16:
+                arguments['--memory'] = int(128000 * (num_procs / 16))
+                    elif num_procs <= 32:
+                arguments['--memory'] = int(256000 * (num_procs / 32))
         elif arguments['--industry']:
             # Check number of processors
             if num_procs > 16:
                 exit('Input Error: Cannot ask for more that 16 cores on industry cluster')
-            
-            # Set Memory Defaults                
-            arguments['--memory'] = 64000 * (num_procs / 16)
+
+            # Set Memory Defaults
+            arguments['--memory'] = int(64000 * (num_procs / 16))
         else:
             # Check number of processors
             if num_procs > 16:
@@ -217,9 +217,9 @@ try:
 
             # Set Memory Default
             if num_procs <= 8:
-                arguments['--memory'] = 23000 * (num_procs / 8)            
+                arguments['--memory'] = int(23000 * (num_procs / 8))
             elif num_procs <= 16:
-                arguments['--memory'] = 125000 * (num_procs / 16)
+                arguments['--memory'] = int(125000 * (num_procs / 16))
     else:
         print("Warning: Set memory to {} MB! SLURM expects this number in MB".format(arguments['--memory']))
 
@@ -230,7 +230,7 @@ try:
     #       3) split() takes the ascii string and splits via black spaces, we need the zero'th element
     username = environ['USER']
     groupname = check_output('groups', shell=True).decode('utf-8').split()[0]
-    
+
     # We are now in a position to generate the '.slurm' file
     slurmname = '{0}.slurm'.format(splitext(arguments['--input'])[0])
     jobname, ext = splitext(arguments['--input'])
