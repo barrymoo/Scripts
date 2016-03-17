@@ -9,6 +9,7 @@ PYBIND11_PLUGIN(libCubeFile) {
   py::module m("libCubeFile", "pybind11 CubeFile shared lib");
 
   py::class_<CubeFile>(m, "CubeFile")
+    .def(py::init<>())
     .def(py::init<const std::string&>())
     .def(py::init<const CubeFile&>())
     .def("read", &CubeFile::read)
