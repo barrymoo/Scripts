@@ -8,9 +8,10 @@
 #include <sstream>
 #include <cmath>
 #include <Python.h>
+#include <boost/python.hpp>
 
 using namespace std;
-//namespace bp = boost::python;
+namespace bp = boost::python;
 
 //Necessary typedefs and structures
 typedef array <double, 3> Vector3d;
@@ -34,7 +35,7 @@ class CubeFile{
         vector <double> cubeVals;
     public:
         //Constructors
-        CubeFile();
+        CubeFile(void);
         CubeFile(const string &filename);
         CubeFile(const CubeFile &A);
         //Member Functions
@@ -56,8 +57,8 @@ class CubeFile{
         CubeFile partition_minus(void);
         double integrate(void) const;
         double iso_volume(const double &iso) const;
-        //bp::list centroid(void) const;
-        //bp::list dens_centroid(void) const;
+        bp::list centroid(void) const;
+        bp::list dens_centroid(void) const;
         void print(void) const;     
         //Operator Overloads
         CubeFile& operator=(const CubeFile &A);
