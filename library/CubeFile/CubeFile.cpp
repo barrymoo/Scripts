@@ -7,14 +7,6 @@
 */
 
 using namespace std;
-//namespace bp = boost::python;
-
-//Function to wrap Vector3d to Boost::Python::List
-//bp::list wrap_Vector3d(const Vector3d &A){
-//    bp::list myList;
-//    for(auto i: A) myList.append(i);
-//    return myList;
-//}
 
 CubeFile::CubeFile(){
   // Do Nothing
@@ -202,85 +194,85 @@ double CubeFile::iso_volume(const double &iso) const {
     return sum;
 }
 
-//bp::list CubeFile::centroid(void) const {
-//    //x, y, z starting points
-//    double xp = startGridPt[0];
-//    double yp = startGridPt[1];
-//    double zp = startGridPt[2];
-//    //Define and initialize centroid vector
-//    Vector3d centroid;
-//    for(size_t i=0; i<3; i++) centroid[i] = 0;
-//    //Traverse cubeVals and generate centroid vector
-//    // cubeVals in a 1d vector, use an outside counter
-//    int counter = 0;
-//    for(size_t i=0; i<numGridPts[0]; i++){
-//        for(size_t j=0; j<numGridPts[1]; j++){
-//            for(size_t k=0; k<numGridPts[2]; k++){
-//                /* \int \phi_i^2 \colvec{x, y, z} dV */
-//                centroid[0] += pow(cubeVals[counter],2) * xp;
-//                centroid[1] += pow(cubeVals[counter],2) * yp;
-//                centroid[2] += pow(cubeVals[counter],2) * zp;
-//                //Increment z point by dz
-//                zp += gridVec[2][2];
-//                //Increment counter every loop iteration
-//                counter += 1;
-//            }
-//            //Reset z point to starting point
-//            zp = startGridPt[2];
-//            //Increment y by dy
-//            yp += gridVec[1][1];
-//        }
-//        //Reset z and y to starting point
-//        zp = startGridPt[2];
-//        yp = startGridPt[1];
-//        //Increment x by dz
-//        xp += gridVec[0][0];
-//    }
-//    //Multiply centroid vector components by dV
-//    for(size_t i=0; i<3; i++) centroid[i] *= intStep;
-//    //Return orbital centroid
-//    return wrap_Vector3d(centroid);
-//}
-//
-//bp::list CubeFile::dens_centroid(void) const {
-//    //x, y, z starting points
-//    double xp = startGridPt[0];
-//    double yp = startGridPt[1];
-//    double zp = startGridPt[2];
-//    //Define and initialize centroid vector
-//    Vector3d centroid;
-//    for(size_t i=0; i<3; i++) centroid[i] = 0;
-//    //Traverse cubeVals and generate centroid vector
-//    // cubeVals in a 1d vector, use an outside counter
-//    int counter = 0;
-//    for(size_t i=0; i<numGridPts[0]; i++){
-//        for(size_t j=0; j<numGridPts[1]; j++){
-//            for(size_t k=0; k<numGridPts[2]; k++){
-//                /* \int \phi_i^2 \colvec{x, y, z} dV */
-//                centroid[0] += cubeVals[counter] * xp;
-//                centroid[1] += cubeVals[counter] * yp;
-//                centroid[2] += cubeVals[counter] * zp;
-//                //Increment z point by dz
-//                zp += gridVec[2][2];
-//                //Increment counter every loop iteration
-//                counter += 1;
-//            }
-//            //Reset z point to starting point
-//            zp = startGridPt[2];
-//            //Increment y by dy
-//            yp += gridVec[1][1];
-//        }
-//        //Reset z and y to starting point
-//        zp = startGridPt[2];
-//        yp = startGridPt[1];
-//        //Increment x by dz
-//        xp += gridVec[0][0];
-//    }
-//    //Multiply centroid vector components by dV
-//    for(size_t i=0; i<3; i++) centroid[i] *= intStep;
-//    //Return orbital centroid
-//    return wrap_Vector3d(centroid);
-//}
+Vector3d CubeFile::centroid(void) const {
+    //x, y, z starting points
+    double xp = startGridPt[0];
+    double yp = startGridPt[1];
+    double zp = startGridPt[2];
+    //Define and initialize centroid vector
+    Vector3d centroid;
+    for(size_t i=0; i<3; i++) centroid[i] = 0;
+    //Traverse cubeVals and generate centroid vector
+    // cubeVals in a 1d vector, use an outside counter
+    int counter = 0;
+    for(size_t i=0; i<numGridPts[0]; i++){
+        for(size_t j=0; j<numGridPts[1]; j++){
+            for(size_t k=0; k<numGridPts[2]; k++){
+                /* \int \phi_i^2 \colvec{x, y, z} dV */
+                centroid[0] += pow(cubeVals[counter],2) * xp;
+                centroid[1] += pow(cubeVals[counter],2) * yp;
+                centroid[2] += pow(cubeVals[counter],2) * zp;
+                //Increment z point by dz
+                zp += gridVec[2][2];
+                //Increment counter every loop iteration
+                counter += 1;
+            }
+            //Reset z point to starting point
+            zp = startGridPt[2];
+            //Increment y by dy
+            yp += gridVec[1][1];
+        }
+        //Reset z and y to starting point
+        zp = startGridPt[2];
+        yp = startGridPt[1];
+        //Increment x by dz
+        xp += gridVec[0][0];
+    }
+    //Multiply centroid vector components by dV
+    for(size_t i=0; i<3; i++) centroid[i] *= intStep;
+    //Return orbital centroid
+    return centroid;
+}
+
+Vector3d CubeFile::dens_centroid(void) const {
+    //x, y, z starting points
+    double xp = startGridPt[0];
+    double yp = startGridPt[1];
+    double zp = startGridPt[2];
+    //Define and initialize centroid vector
+    Vector3d centroid;
+    for(size_t i=0; i<3; i++) centroid[i] = 0;
+    //Traverse cubeVals and generate centroid vector
+    // cubeVals in a 1d vector, use an outside counter
+    int counter = 0;
+    for(size_t i=0; i<numGridPts[0]; i++){
+        for(size_t j=0; j<numGridPts[1]; j++){
+            for(size_t k=0; k<numGridPts[2]; k++){
+                /* \int \phi_i^2 \colvec{x, y, z} dV */
+                centroid[0] += cubeVals[counter] * xp;
+                centroid[1] += cubeVals[counter] * yp;
+                centroid[2] += cubeVals[counter] * zp;
+                //Increment z point by dz
+                zp += gridVec[2][2];
+                //Increment counter every loop iteration
+                counter += 1;
+            }
+            //Reset z point to starting point
+            zp = startGridPt[2];
+            //Increment y by dy
+            yp += gridVec[1][1];
+        }
+        //Reset z and y to starting point
+        zp = startGridPt[2];
+        yp = startGridPt[1];
+        //Increment x by dz
+        xp += gridVec[0][0];
+    }
+    //Multiply centroid vector components by dV
+    for(size_t i=0; i<3; i++) centroid[i] *= intStep;
+    //Return orbital centroid
+    return centroid;
+}
 
 void CubeFile::print(void) const {
     cout << "\ncubeVals:\n";

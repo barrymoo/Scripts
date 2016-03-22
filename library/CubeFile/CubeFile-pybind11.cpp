@@ -2,6 +2,7 @@
 #include <Python.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/operators.h>
+#include <pybind11/stl.h>
 
 namespace py = pybind11;
 
@@ -26,8 +27,8 @@ PYBIND11_PLUGIN(libCubeFile) {
     .def("zero_cubeVals", &CubeFile::zero_cubeVals)
     .def("integrate", &CubeFile::integrate)
     .def("iso_volume", &CubeFile::iso_volume)
-    //.def("centroid", &CubeFile::centroid)
-    //.def("dens_centroid", &CubeFile::dens_centroid)
+    .def("centroid", &CubeFile::centroid)
+    .def("dens_centroid", &CubeFile::dens_centroid)
     .def("print", &CubeFile::print)
     //Operator Overload
     .def(py::self += CubeFile())

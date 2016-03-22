@@ -10,7 +10,6 @@
 #include <Python.h>
 
 using namespace std;
-//namespace bp = boost::python;
 
 //Necessary typedefs and structures
 typedef array <double, 3> Vector3d;
@@ -56,8 +55,8 @@ class CubeFile{
         CubeFile partition_minus(void);
         double integrate(void) const;
         double iso_volume(const double &iso) const;
-        //bp::list centroid(void) const;
-        //bp::list dens_centroid(void) const;
+        Vector3d centroid(void) const;
+        Vector3d dens_centroid(void) const;
         void print(void) const;     
         //Operator Overloads
         CubeFile& operator=(const CubeFile &A);
